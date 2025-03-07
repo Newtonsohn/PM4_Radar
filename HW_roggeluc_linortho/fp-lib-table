@@ -1,3 +1,0 @@
-(fp_lib_table
-  (lib (name "HW_template")(type "KiCad")(uri "${KIPRJMOD}/HW_template.pretty")(options "")(descr ""))
-)
