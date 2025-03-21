@@ -566,7 +566,12 @@
     },
     "net_colors": null,
     "netclass_assignments": null,
-    "netclass_patterns": []
+    "netclass_patterns": [
+      {
+        "netclass": "Default",
+        "pattern": "IF_I"
+      }
+    ]
   },
   "pcbnew": {
     "last_paths": {
@@ -697,10 +702,6 @@
     [
       "1f276d59-ad9b-4e70-a842-f3b7e562eb9b",
       "Root"
-    ],
-    [
-      "12fcc65d-dd77-40b1-ae40-e29cdf7d08dc",
-      "pads_left_right"
     ],
     [
       "de01ffac-1f9d-4a03-9ae5-48822ed64956",
