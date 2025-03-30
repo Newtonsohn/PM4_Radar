@@ -4226,6 +4226,12 @@
 		(uuid "009ae964-39cf-4eb4-8d3a-13db583f7a1b")
 	)
 	(junction
+		(at 209.55 90.17)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "064a72d6-fafd-408e-a817-b161823e5b01")
+	)
+	(junction
 		(at 185.42 71.12)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4266,6 +4272,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "1a5f644e-5873-415e-a17d-2e1a1fe18308")
+	)
+	(junction
+		(at 66.04 71.12)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1ef05676-6ec6-42cf-8306-04efbde3eeab")
 	)
 	(junction
 		(at 241.3 101.6)
@@ -4310,6 +4322,18 @@
 		(uuid "48b2a49c-e284-4543-8356-5de19d836f58")
 	)
 	(junction
+		(at 222.25 139.7)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "527f963c-248d-48ce-9c06-506e5b0c4890")
+	)
+	(junction
+		(at 243.84 81.28)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "631b3b4e-b134-4b03-8dbc-4e87082a62a9")
+	)
+	(junction
 		(at 17.78 171.45)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -4320,12 +4344,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "6edf3ce5-b35c-4ee2-9ddd-60f5a08dbf2e")
-	)
-	(junction
-		(at 233.68 43.18)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "7254d851-974d-4bae-a1a2-c9a53de1e1b7")
 	)
 	(junction
 		(at 31.75 171.45)
@@ -4344,6 +4362,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "79327310-c0a3-4733-a8eb-60964ef4e098")
+	)
+	(junction
+		(at 269.24 81.28)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "85e9d540-0c51-4b8a-84a9-78400dd7caad")
 	)
 	(junction
 		(at 35.56 71.12)
@@ -4553,6 +4577,16 @@
 	)
 	(wire
 		(pts
+			(xy 205.74 139.7) (xy 222.25 139.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "09ca9df2-d4c7-4acb-b1e9-480fac247d49")
+	)
+	(wire
+		(pts
 			(xy 228.6 81.28) (xy 231.14 81.28)
 		)
 		(stroke
@@ -4643,6 +4677,16 @@
 	)
 	(wire
 		(pts
+			(xy 269.24 81.28) (xy 278.13 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "16096ca4-6277-435b-8587-097e13f1f2f6")
+	)
+	(wire
+		(pts
 			(xy 170.18 88.9) (xy 170.18 124.46)
 		)
 		(stroke
@@ -4663,6 +4707,16 @@
 	)
 	(wire
 		(pts
+			(xy 243.84 81.28) (xy 245.11 81.28)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "173bd626-9743-4fe6-9ea1-e86d181189f7")
+	)
+	(wire
+		(pts
 			(xy 82.55 170.18) (xy 99.06 170.18)
 		)
 		(stroke
@@ -4673,7 +4727,7 @@
 	)
 	(wire
 		(pts
-			(xy 57.15 71.12) (xy 68.58 71.12)
+			(xy 57.15 71.12) (xy 66.04 71.12)
 		)
 		(stroke
 			(width 0)
@@ -4730,16 +4784,6 @@
 			(type default)
 		)
 		(uuid "21743388-9d6d-4049-9794-874ebae00eb7")
-	)
-	(wire
-		(pts
-			(xy 229.87 43.18) (xy 233.68 43.18)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "223fbdb1-e031-4f5a-8674-597411205790")
 	)
 	(wire
 		(pts
@@ -4843,6 +4887,16 @@
 	)
 	(wire
 		(pts
+			(xy 278.13 39.37) (xy 276.86 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "29605637-be06-45d0-8ca5-5ed13a85405b")
+	)
+	(wire
+		(pts
 			(xy 199.39 71.12) (xy 199.39 81.28)
 		)
 		(stroke
@@ -4873,7 +4927,7 @@
 	)
 	(wire
 		(pts
-			(xy 241.3 81.28) (xy 245.11 81.28)
+			(xy 241.3 81.28) (xy 243.84 81.28)
 		)
 		(stroke
 			(width 0)
@@ -4900,6 +4954,16 @@
 			(type default)
 		)
 		(uuid "32efc012-547e-44dc-b061-8a5b7eacf48b")
+	)
+	(wire
+		(pts
+			(xy 209.55 90.17) (xy 213.36 90.17)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "34c24137-29dc-4e9a-8a31-2db848c7dd0e")
 	)
 	(wire
 		(pts
@@ -5023,7 +5087,7 @@
 	)
 	(wire
 		(pts
-			(xy 201.93 90.17) (xy 213.36 90.17)
+			(xy 201.93 90.17) (xy 209.55 90.17)
 		)
 		(stroke
 			(width 0)
@@ -5043,16 +5107,6 @@
 	)
 	(wire
 		(pts
-			(xy 243.84 142.24) (xy 245.11 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "4637f4c2-dac4-463d-8629-ce62b6b309de")
-	)
-	(wire
-		(pts
 			(xy 201.93 106.68) (xy 201.93 113.03)
 		)
 		(stroke
@@ -5060,6 +5114,16 @@
 			(type default)
 		)
 		(uuid "46d7f129-c902-410d-9430-6151bed3f0b4")
+	)
+	(wire
+		(pts
+			(xy 316.23 39.37) (xy 323.85 39.37)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4bca2d23-b6c6-45f1-8a33-7d1348e0af45")
 	)
 	(wire
 		(pts
@@ -5363,6 +5427,16 @@
 	)
 	(wire
 		(pts
+			(xy 205.74 147.32) (xy 205.74 148.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7ba456dd-ee2c-4849-b17f-3003b3f70f8f")
+	)
+	(wire
+		(pts
 			(xy 22.86 86.36) (xy 35.56 86.36)
 		)
 		(stroke
@@ -5443,7 +5517,7 @@
 	)
 	(wire
 		(pts
-			(xy 265.43 81.28) (xy 278.13 81.28)
+			(xy 265.43 81.28) (xy 269.24 81.28)
 		)
 		(stroke
 			(width 0)
@@ -5533,7 +5607,7 @@
 	)
 	(wire
 		(pts
-			(xy 236.22 142.24) (xy 234.95 142.24)
+			(xy 234.95 142.24) (xy 245.11 142.24)
 		)
 		(stroke
 			(width 0)
@@ -5600,6 +5674,16 @@
 			(type default)
 		)
 		(uuid "98cd9346-a889-406e-8e9f-abe01dbf063d")
+	)
+	(wire
+		(pts
+			(xy 66.04 71.12) (xy 68.58 71.12)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "994a6ca9-fa2f-44fd-98fb-ad8e2c428eef")
 	)
 	(wire
 		(pts
@@ -6023,6 +6107,16 @@
 	)
 	(wire
 		(pts
+			(xy 222.25 139.7) (xy 222.25 148.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e04a9616-1f96-4fa6-8fae-707d0310860e")
+	)
+	(wire
+		(pts
 			(xy 31.75 184.15) (xy 31.75 181.61)
 		)
 		(stroke
@@ -6073,7 +6167,7 @@
 	)
 	(wire
 		(pts
-			(xy 222.25 135.89) (xy 222.25 148.59)
+			(xy 222.25 135.89) (xy 222.25 139.7)
 		)
 		(stroke
 			(width 0)
@@ -6205,28 +6299,6 @@
 			)
 		)
 	)
-	(global_label "en_boost"
-		(shape input)
-		(at 229.87 43.18 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "1daf6063-a21f-4e09-bb22-913c3fc27770")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 218.4788 43.18 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-				(hide yes)
-			)
-		)
-	)
 	(global_label "PE2"
 		(shape input)
 		(at 154.94 181.61 180)
@@ -6293,6 +6365,50 @@
 			)
 		)
 	)
+	(global_label "5V"
+		(shape input)
+		(at 190.5 97.79 90)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "2f35d1d0-bfee-44fe-a188-4a2d5bdf4c92")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 190.5 92.5067 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "pullup"
+		(shape input)
+		(at 278.13 39.37 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "5d049f6e-e86e-4ed1-b504-72c82de2ea40")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 287.0416 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
 	(global_label "SPI4_MISO"
 		(shape input)
 		(at 161.29 193.04 0)
@@ -6306,6 +6422,28 @@
 		(uuid "68c1be45-7fbe-47da-8dc0-bba4173e89f9")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 174.1328 193.04 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "pullup"
+		(shape input)
+		(at 323.85 39.37 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "6a28b658-b5e9-46cb-b150-f7a23bcd79ed")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 332.7616 39.37 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -6377,28 +6515,6 @@
 					(size 1.27 1.27)
 				)
 				(justify right)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "en_boost"
-		(shape input)
-		(at 190.5 97.79 90)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "9722ac28-0a3f-4c6c-91c0-89e0fcc497f7")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 190.5 86.3988 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
 				(hide yes)
 			)
 		)
@@ -6531,6 +6647,28 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "PA6"
+		(shape input)
+		(at 316.23 39.37 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "d9c6f5ca-44c5-4512-a223-9c756919cb2c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 309.6767 39.37 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 				(hide yes)
 			)
 		)
@@ -7223,6 +7361,100 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 276.86 19.05 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "0c8982de-96f3-4721-b243-68c75c309c93")
+		(property "Reference" "TP14"
+			(at 279.4 15.1129 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "~"
+			(at 279.4 17.018 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Loop_D2.60mm_Drill1.6mm_Beaded"
+			(at 281.94 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 281.94 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 276.86 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "SPICE"
+			(at 276.86 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Params" "type=\"R\" model=\"coil_left\" lib=\"\""
+			(at 33.02 -29.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=1"
+			(at 33.02 -29.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7a471ff9-6047-4a8a-870b-4930016458ce")
+		)
+		(instances
+			(project "HW_roggeluc_linortho"
+				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
+					(reference "TP14")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 276.86 29.21 180)
 		(unit 1)
@@ -7354,6 +7586,100 @@
 			(project "HW_roggeluc_linortho"
 				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
 					(reference "R43")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 243.84 81.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "0f15d092-13c4-480e-9cbb-59cd173fb101")
+		(property "Reference" "TP18"
+			(at 246.38 77.3429 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "~"
+			(at 246.38 79.248 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Loop_D2.60mm_Drill1.6mm_Beaded"
+			(at 248.92 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 248.92 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 243.84 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "SPICE"
+			(at 243.84 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Params" "type=\"R\" model=\"coil_left\" lib=\"\""
+			(at 0 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=1"
+			(at 0 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "c4ec14cf-541c-485f-8b6d-73210b4a9830")
+		)
+		(instances
+			(project "HW_roggeluc_linortho"
+				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
+					(reference "TP18")
 					(unit 1)
 				)
 			)
@@ -7561,74 +7887,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:R")
-		(at 240.03 142.24 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "1eabcafa-53c1-48c0-8951-12b2fa652624")
-		(property "Reference" "R16"
-			(at 240.03 135.89 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Value" "10"
-			(at 240.03 138.43 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
-			(at 240.03 140.462 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 240.03 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 240.03 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e85eab32-9750-4a0a-9c53-e2ac1f39cfa0")
-		)
-		(pin "2"
-			(uuid "dcc891a1-e489-4ca7-befa-51db1152e282")
-		)
-		(instances
-			(project "HW_template"
-				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
-					(reference "R16")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Device:LED")
 		(at 52.07 151.13 90)
 		(unit 1)
@@ -7719,6 +7977,72 @@
 			(project "HW_template"
 				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
 					(reference "LED3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 205.74 156.21 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "24cf106d-2162-4ffa-872d-d902427dabfb")
+		(property "Reference" "#PWR040"
+			(at 205.74 162.56 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 205.74 161.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 205.74 156.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 205.74 156.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 205.74 156.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b01f0530-814c-4f3d-8663-c83a0ee2fc7b")
+		)
+		(instances
+			(project "HW_roggeluc_linortho"
+				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
+					(reference "#PWR040")
 					(unit 1)
 				)
 			)
@@ -8353,6 +8677,100 @@
 			(project ""
 				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
 					(reference "L1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 66.04 71.12 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "3573f8f0-4b36-4f6f-b6a8-b3b33dbe8863")
+		(property "Reference" "TP17"
+			(at 68.58 67.1829 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "~"
+			(at 68.58 69.088 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Loop_D2.60mm_Drill1.6mm_Beaded"
+			(at 71.12 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 71.12 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 66.04 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "SPICE"
+			(at 66.04 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Params" "type=\"R\" model=\"coil_left\" lib=\"\""
+			(at -177.8 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=1"
+			(at -177.8 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "89fa3356-9e22-4fcb-b874-b821a7f9cbca")
+		)
+		(instances
+			(project "HW_roggeluc_linortho"
+				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
+					(reference "TP17")
 					(unit 1)
 				)
 			)
@@ -9005,6 +9423,76 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 205.74 152.4 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "439f68ad-859d-4ab4-a447-8990a1308f72")
+		(property "Reference" "R55"
+			(at 208.28 151.1299 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 208.28 153.6699 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder"
+			(at 203.962 152.4 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 205.74 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 205.74 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "09266950-f7e2-407d-b5de-8dba2a6c6208")
+		)
+		(pin "2"
+			(uuid "d8d87a62-1527-4182-8cfd-e663b7235c4a")
+		)
+		(instances
+			(project "HW_roggeluc_linortho"
+				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
+					(reference "R55")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "HW_template:Radar K-LC5-RFB-00C")
 		(at 275.59 152.4 0)
 		(unit 1)
@@ -9177,6 +9665,100 @@
 			(project "HW_roggeluc_linortho"
 				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
 					(reference "Q9")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 170.18 71.12 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "4499188f-b694-4112-923e-a5451e050f42")
+		(property "Reference" "TP16"
+			(at 172.72 67.1829 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "~"
+			(at 172.72 69.088 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Loop_D2.60mm_Drill1.6mm_Beaded"
+			(at 175.26 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 175.26 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 170.18 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "SPICE"
+			(at 170.18 71.12 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Params" "type=\"R\" model=\"coil_left\" lib=\"\""
+			(at -73.66 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=1"
+			(at -73.66 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "7e537672-61b6-45e4-9a64-4f267ab20bfa")
+		)
+		(instances
+			(project "HW_roggeluc_linortho"
+				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
+					(reference "TP16")
 					(unit 1)
 				)
 			)
@@ -10897,6 +11479,102 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:LED")
+		(at 205.74 143.51 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "973eb82d-ad51-4576-b6bd-ac0b374c5e5c")
+		(property "Reference" "CHARGE2"
+			(at 208.026 142.24 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "LEDcharge"
+			(at 207.772 144.526 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" "LED_SMD:LED_1206_3216Metric_Pad1.42x1.75mm_HandSolder"
+			(at 205.74 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 205.74 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 205.74 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Library" "spice\\miscellaneous.lib"
+			(at 205.74 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Name" "LEDred"
+			(at 205.74 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "2=1 1=2"
+			(at 205.74 143.51 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "596447a2-0598-4a14-bf7c-831d78456d2a")
+		)
+		(pin "2"
+			(uuid "b0bbeef1-4727-4d98-823d-b9d156fa7f64")
+		)
+		(instances
+			(project "HW_roggeluc_linortho"
+				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
+					(reference "CHARGE2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 17.78 184.15 0)
 		(unit 1)
@@ -11684,6 +12362,100 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 209.55 90.17 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "b2e2a964-1ee5-4be4-b31f-fcd49b32bff3")
+		(property "Reference" "TP20"
+			(at 212.09 86.2329 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "~"
+			(at 212.09 88.138 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Loop_D2.60mm_Drill1.6mm_Beaded"
+			(at 214.63 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 214.63 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 209.55 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "SPICE"
+			(at 209.55 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Params" "type=\"R\" model=\"coil_left\" lib=\"\""
+			(at -34.29 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=1"
+			(at -34.29 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "4fd083b1-6da0-4985-a506-56fceb724c9d")
+		)
+		(instances
+			(project "HW_roggeluc_linortho"
+				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
+					(reference "TP20")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Transistor_FET:Si2319CDS")
 		(at 264.16 21.59 270)
 		(mirror x)
@@ -12255,6 +13027,100 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 247.65 19.05 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "d1b7fbc2-309c-4134-93c6-0d5a6fbd23af")
+		(property "Reference" "TP15"
+			(at 250.19 15.1129 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "~"
+			(at 250.19 17.018 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Loop_D2.60mm_Drill1.6mm_Beaded"
+			(at 252.73 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 252.73 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 247.65 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "SPICE"
+			(at 247.65 19.05 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Params" "type=\"R\" model=\"coil_left\" lib=\"\""
+			(at 3.81 -29.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=1"
+			(at 3.81 -29.21 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f62a2bc7-bbe7-4b93-9e09-a11489c50977")
+		)
+		(instances
+			(project "HW_roggeluc_linortho"
+				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
+					(reference "TP15")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 116.84 91.44 0)
 		(unit 1)
@@ -12760,6 +13626,100 @@
 			(project "HW_template"
 				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
 					(reference "#PWR034")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector:TestPoint")
+		(at 269.24 81.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ec7e4726-8fc5-4b64-b35e-a7a0733c68a8")
+		(property "Reference" "TP19"
+			(at 271.78 77.3429 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "~"
+			(at 271.78 79.248 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "TestPoint:TestPoint_Loop_D2.60mm_Drill1.6mm_Beaded"
+			(at 274.32 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 274.32 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 269.24 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Device" "SPICE"
+			(at 269.24 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Params" "type=\"R\" model=\"coil_left\" lib=\"\""
+			(at 25.4 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Sim.Pins" "1=1"
+			(at 25.4 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "66a89b83-c79f-4384-af17-5060bc23bcbd")
+		)
+		(instances
+			(project "HW_roggeluc_linortho"
+				(path "/1f276d59-ad9b-4e70-a842-f3b7e562eb9b/666a1d31-5908-41dd-bbf5-17c62b80b23c"
+					(reference "TP19")
 					(unit 1)
 				)
 			)
