@@ -59,7 +59,56 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        [
+          "clearance|77847500|146685000|be1157a6-5efb-4096-b5e9-e4015705250b|32226840-4c70-4208-b2ed-39213741de47",
+          ""
+        ],
+        [
+          "clearance|78347500|145105000|66b45a1d-3cea-45b3-8aba-2f5bab29930b|32226840-4c70-4208-b2ed-39213741de47",
+          ""
+        ],
+        [
+          "clearance|78347500|146685000|f564a06d-48b7-4249-bd78-d89cd7bf356a|32226840-4c70-4208-b2ed-39213741de47",
+          ""
+        ],
+        [
+          "clearance|78847500|145105000|fbf82cf6-681a-4499-8dcd-45a8ea0cdf9e|32226840-4c70-4208-b2ed-39213741de47",
+          ""
+        ],
+        [
+          "clearance|78847500|146685000|2720532f-a592-4e0e-ac3d-13d20864bc9d|32226840-4c70-4208-b2ed-39213741de47",
+          ""
+        ],
+        [
+          "clearance|79347500|145105000|cb879621-ac57-4b4a-ae7c-8074c8f52fbd|32226840-4c70-4208-b2ed-39213741de47",
+          ""
+        ],
+        [
+          "clearance|79347500|146685000|e086a827-2339-4cf2-8a36-400975b345bc|32226840-4c70-4208-b2ed-39213741de47",
+          ""
+        ],
+        [
+          "clearance|79847500|145105000|b2d833c4-77b4-4b48-8383-d0ba2ecd7a64|32226840-4c70-4208-b2ed-39213741de47",
+          ""
+        ],
+        [
+          "clearance|79847500|146685000|9f2e0d76-8cc8-4765-b52d-51ee64658498|32226840-4c70-4208-b2ed-39213741de47",
+          ""
+        ],
+        [
+          "silk_edge_clearance|64537506|29380000|2e81e19f-eac7-41d7-a951-315699699d1b|9e472d9f-357e-40a5-9397-bdeb101f8794",
+          ""
+        ],
+        [
+          "silk_edge_clearance|75462493|29380000|2e81e19f-eac7-41d7-a951-315699699d1b|7007769d-efea-415f-b30e-ca1faed68477",
+          ""
+        ],
+        [
+          "starved_thermal|49040000|84423750|ccb277f6-8508-465e-b1af-a6cf1b0483f0|1f13c6a0-defa-4ebc-ac17-26df79b13474|B.Cu",
+          ""
+        ]
+      ],
       "meta": {
         "version": 2
       },
@@ -108,7 +157,7 @@
         "skew_out_of_range": "error",
         "solder_mask_bridge": "error",
         "starved_thermal": "error",
-        "text_height": "warning",
+        "text_height": "ignore",
         "text_thickness": "warning",
         "through_hole_pad_without_hole": "error",
         "too_many_vias": "error",
@@ -193,7 +242,9 @@
         }
       ],
       "track_widths": [
-        0.0
+        0.0,
+        0.12,
+        0.2
       ],
       "tuning_pattern_settings": {
         "diff_pair_defaults": {
@@ -559,7 +610,7 @@
       "gencad": "",
       "idf": "",
       "netlist": "",
-      "plot": "",
+      "plot": "PM4_roggeluc_linortho_gerber",
       "pos_files": "",
       "specctra_dsn": "",
       "step": "",
