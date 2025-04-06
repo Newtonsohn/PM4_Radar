@@ -1,0 +1,4 @@
+#Sun Apr 06 12:16:21 CEST 2025
+__DEFAULT__=false
+expression=installed soft
+org.eclipse.help.ui.localSearch.master=true

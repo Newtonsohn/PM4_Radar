@@ -1,0 +1,43 @@
+!SESSION 2025-04-04 14:23:08.935 -----------------------------------------------
+eclipse.buildId=Version 1.17.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=de_DE
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-04-04 14:55:12.652
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-04-04 14:55:12.656
+!MESSAGE Log4j2 initialized with config file C:\Users\roche\OneDrive\Dokumente\ZHAW\Sem_6\PM4\PM4_Radar\Code\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-04-04 14:55:23.277
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-04-04 15:00:54.152
+!MESSAGE Indexed 'PM4_Firmware' (19 sources, 81 headers) in 14.2 sec: 4,614 declarations; 19,513 references; 0 unresolved inclusions; 1 syntax errors; 2 unresolved names (0.0083%)
+
+!ENTRY org.eclipse.help.base 2 0 2025-04-06 12:11:33.650
+!MESSAGE Unable to consume Lucene index from bundle 'org.eclipse.cdt.doc.user_11.4.0.202309142347 [184]'. The index should be rebuilt with Lucene 9.8.0
+!SESSION 2025-04-06 13:00:49.984 -----------------------------------------------
+eclipse.buildId=Version 1.17.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=de_DE
+Framework arguments:  C:\Users\roche\OneDrive\Dokumente\ZHAW\Sem_6\PM4\PM4_Radar\Code\PM4_Firmware\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 C:\Users\roche\OneDrive\Dokumente\ZHAW\Sem_6\PM4\PM4_Radar\Code\PM4_Firmware\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2025-04-06 13:03:16.194
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2025-04-06 13:03:16.196
+!MESSAGE Log4j2 initialized with config file C:\Users\roche\OneDrive\Dokumente\ZHAW\Sem_6\PM4\PM4_Radar\Code\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2025-04-06 13:03:29.396
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.cdt.core 1 0 2025-04-06 13:03:35.398
+!MESSAGE Indexed 'PM4_Firmware' (28 sources, 128 headers) in 5.58 sec: 14,768 declarations; 78,672 references; 1 unresolved inclusions; 92 syntax errors; 240 unresolved names (0.26%)
+
+!ENTRY com.st.stm32cube.ide.mcu.build 1 1 2025-04-06 14:01:19.465
+!MESSAGE Converted project PM4_Firmware to C++ in 527 (ms)
