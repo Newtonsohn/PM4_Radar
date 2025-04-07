@@ -1,0 +1,13 @@
+../Middlewares/ST/touchgfx/framework/include/mvp/Presenter.hpp:37:18:virtual void touchgfx::Presenter::activate()	16	static
+../Middlewares/ST/touchgfx/framework/include/mvp/Presenter.hpp:47:18:virtual void touchgfx::Presenter::deactivate()	16	static
+../Middlewares/ST/touchgfx/framework/include/mvp/Presenter.hpp:52:13:touchgfx::Presenter::~Presenter()	16	static
+../Middlewares/ST/touchgfx/framework/include/mvp/Presenter.hpp:52:13:virtual touchgfx::Presenter::~Presenter()	16	static
+../Middlewares/ST/touchgfx/framework/include/mvp/Presenter.hpp:58:5:touchgfx::Presenter::Presenter()	16	static
+../TouchGFX/gui/include/gui/model/ModelListener.hpp:9:5:ModelListener::ModelListener()	16	static
+../TouchGFX/gui/include/gui/model/ModelListener.hpp:11:13:ModelListener::~ModelListener()	16	static
+../TouchGFX/gui/include/gui/model/ModelListener.hpp:11:13:virtual ModelListener::~ModelListener()	16	static
+../TouchGFX/gui/include/gui/login_screen/loginPresenter.hpp:28:13:loginPresenter::~loginPresenter()	16	static
+../TouchGFX/gui/include/gui/login_screen/loginPresenter.hpp:28:13:virtual loginPresenter::~loginPresenter()	16	static
+../TouchGFX/gui/src/login_screen/loginPresenter.cpp:4:1:loginPresenter::loginPresenter(loginView&)	16	static
+../TouchGFX/gui/src/login_screen/loginPresenter.cpp:10:6:virtual void loginPresenter::activate()	16	static
+../TouchGFX/gui/src/login_screen/loginPresenter.cpp:15:6:virtual void loginPresenter::deactivate()	16	static

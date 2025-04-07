@@ -33,7 +33,6 @@ void TouchGFXHAL::initialize()
     // To overwrite the generated implementation, omit the call to the parent function
     // and implement the needed functionality here.
     // Please note, HAL::initialize() must be called to initialize the framework.
-
     TouchGFXGeneratedHAL::initialize();
 }
 

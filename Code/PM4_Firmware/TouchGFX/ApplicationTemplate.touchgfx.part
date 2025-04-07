@@ -10,8 +10,8 @@
     },
     "AvailableResolutions": [
       {
-        "Width": 32,
-        "Height": 32
+        "Width": 240,
+        "Height": 320
       }
     ],
     "PostGenerateTargetCommand": "touchgfx update_project",
