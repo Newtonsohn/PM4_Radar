@@ -4253,7 +4253,7 @@
 			(net 42 "Net-(SW1A-C)")
 			(pinfunction "C")
 			(pintype "passive")
-			(uuid "460e795d-d4d4-4516-bec9-c5a521a17eb8")
+			(uuid "66755ffa-cfd8-48e1-9586-0c221d0f25ec")
 		)
 		(pad "2" smd rect
 			(at -3.4 2)
@@ -4271,7 +4271,7 @@
 			(net 166 "PA6")
 			(pinfunction "D")
 			(pintype "passive")
-			(uuid "6720b2f7-0e8d-421f-bb3e-825f39a90cc9")
+			(uuid "8bea11b1-dd5b-42ce-8e34-317293907fc4")
 		)
 		(embedded_fonts no)
 		(model "${KICAD9_3DMODEL_DIR}/Button_Switch_SMD.3dshapes/SW_SPST_EVQQ2.wrl"
@@ -12446,7 +12446,7 @@
 			(net 2 "GND")
 			(pinfunction "Shield")
 			(pintype "passive")
-			(uuid "ede8f7b7-3eee-4e60-b0d6-af6ec0234fa3")
+			(uuid "142c8408-5a72-4084-908a-66881d6a4375")
 		)
 		(pad "6" smd rect
 			(at 4.45 -2.6)
@@ -12455,7 +12455,7 @@
 			(net 2 "GND")
 			(pinfunction "Shield")
 			(pintype "passive")
-			(uuid "ede8f7b7-3eee-4e60-b0d6-af6ec0234fa3")
+			(uuid "799c22e4-e0c8-4a04-a6a5-962059a02542")
 		)
 		(pad "6" smd rect
 			(at 4.45 2.85)
@@ -12464,7 +12464,7 @@
 			(net 2 "GND")
 			(pinfunction "Shield")
 			(pintype "passive")
-			(uuid "ede8f7b7-3eee-4e60-b0d6-af6ec0234fa3")
+			(uuid "c68f80da-4a95-469d-a6ae-6bfe20686490")
 		)
 		(embedded_fonts no)
 		(model "${KICAD9_3DMODEL_DIR}/Connector_USB.3dshapes/USB_Mini-B_Lumberg_2486_01_Horizontal.wrl"
@@ -16366,7 +16366,7 @@
 		(property "Reference" "R44"
 			(at -3.5 0 0)
 			(layer "F.SilkS")
-			(uuid "fa5fb318-a3bc-44f8-8a5e-f2a730ff72c4")
+			(uuid "95c5d055-74be-49bd-a946-5b182e9627a7")
 			(effects
 				(font
 					(size 1 1)
@@ -16377,7 +16377,7 @@
 		(property "Value" "330"
 			(at 0 1.65 0)
 			(layer "F.Fab")
-			(uuid "0b265b3d-5f13-4d7b-a6bc-8479096bf87d")
+			(uuid "010730cd-61a6-42d2-85ff-5f03ae2f9fc5")
 			(effects
 				(font
 					(size 1 1)
@@ -16390,7 +16390,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "36b21bfb-dfcf-4343-811d-70ac2323ab93")
+			(uuid "24923acb-81be-4b31-8176-1012c7bfe90d")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16403,7 +16403,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "29a91f1c-ca14-4393-8a25-79720233ec7b")
+			(uuid "e3732782-9483-41b6-addf-aea5d1911419")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19483,7 +19483,7 @@
 		(property "Reference" "R16"
 			(at 1.5 -1.65 0)
 			(layer "F.SilkS")
-			(uuid "53adff56-c22c-4a22-aa76-3d6c4cb5f029")
+			(uuid "358ae3be-564a-4be1-aac2-da34359e3e61")
 			(effects
 				(font
 					(size 1 1)
@@ -19494,7 +19494,7 @@
 		(property "Value" "10"
 			(at 0 1.65 0)
 			(layer "F.Fab")
-			(uuid "b44d5108-b047-4b8e-ba8f-b40a631a290a")
+			(uuid "098762ba-b4ee-4f09-adcd-9505d64aff38")
 			(effects
 				(font
 					(size 1 1)
@@ -19507,7 +19507,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "4ceb23cd-e70b-4ae5-abfd-4460ca310cd4")
+			(uuid "ba5dc257-21e8-4565-885f-858b9d97f636")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -19520,7 +19520,7 @@
 			(unlocked yes)
 			(layer "F.Fab")
 			(hide yes)
-			(uuid "63b67cdb-573f-46bf-95ee-25e9164ecfae")
+			(uuid "cd7853cb-09a8-48b0-bcb3-f1fbcc21948e")
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23775,7 +23775,7 @@
 			(net 51 "+3.3V")
 			(pinfunction "VO")
 			(pintype "power_out")
-			(uuid "3cb3aa59-4120-4e2a-a894-6bac0d74a938")
+			(uuid "b6341a90-a6c8-46bf-afa6-9db7f442496c")
 		)
 		(pad "3" smd roundrect
 			(at -3.15 2.3)
@@ -26929,7 +26929,7 @@
 			(net 2 "GND")
 			(pinfunction "SHIELD")
 			(pintype "passive")
-			(uuid "54b98747-1684-4c37-83b9-ef2d7e8a0708")
+			(uuid "a8a0d4a6-0a5d-4aa6-afb6-2411226d4e6b")
 		)
 		(pad "9" smd rect
 			(at 6.875 -4.15 180)
@@ -26938,7 +26938,7 @@
 			(net 2 "GND")
 			(pinfunction "SHIELD")
 			(pintype "passive")
-			(uuid "54b98747-1684-4c37-83b9-ef2d7e8a0708")
+			(uuid "a391f548-94b0-4d00-a3f7-6c66997fbcdf")
 		)
 		(pad "9" smd rect
 			(at 6.875 4.15 180)
@@ -26947,7 +26947,7 @@
 			(net 2 "GND")
 			(pinfunction "SHIELD")
 			(pintype "passive")
-			(uuid "54b98747-1684-4c37-83b9-ef2d7e8a0708")
+			(uuid "6c56a035-10ff-461a-95d9-a434758e3b1a")
 		)
 		(embedded_fonts no)
 		(model "${KICAD9_3DMODEL_DIR}/Connector_Card.3dshapes/microSD_HC_Wuerth_693072010801.wrl"
