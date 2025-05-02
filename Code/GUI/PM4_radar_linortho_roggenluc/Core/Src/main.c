@@ -21,6 +21,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "app_touchgfx.h"
+#include "arm_math.h"
 
 
 /* Private includes ----------------------------------------------------------*/

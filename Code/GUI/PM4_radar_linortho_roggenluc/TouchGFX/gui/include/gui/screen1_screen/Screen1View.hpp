@@ -11,7 +11,14 @@ public:
     virtual ~Screen1View() {}
     virtual void setupScreen();
     virtual void tearDownScreen();
+    virtual void handleTickEvent();  // Für periodische Updates
+
 protected:
+    LineChart chart;
+    static const int DATA_POINTS = 100;
+    int16_t iData[DATA_POINTS];
+    int16_t qData[DATA_POINTS];
+    int dataIndex = 0;
 };
 
 #endif // SCREEN1VIEW_HPP
