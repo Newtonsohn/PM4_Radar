@@ -26,8 +26,12 @@
 #include "stm32f429i_discovery_ts.h"
 
 #include "main.h"
-
+#include "pushbutton.h"
 #include "menu.h"
+#include "measuring.h"
+#include <string.h>
+//#include "calc.h"
+#include "arm_math.h"
 
 
 /******************************************************************************
@@ -97,7 +101,7 @@ void MENU_hint(void)
 	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
 	BSP_LCD_SetFont(&Font24);
-	BSP_LCD_DisplayStringAt(5,10, (uint8_t *)"DEMO-CODE", LEFT_MODE);
+	BSP_LCD_DisplayStringAt(5,10, (uint8_t *)"KEK-CODE", LEFT_MODE);
 	BSP_LCD_SetFont(&Font16);
 	BSP_LCD_DisplayStringAt(5, 60, (uint8_t *)"Touch a menu item", LEFT_MODE);
 	BSP_LCD_DisplayStringAt(5, 80, (uint8_t *)"to start an ADC demo", LEFT_MODE);
@@ -147,12 +151,23 @@ MENU_entry_t MENU_get_entry(const MENU_item_t item)
  * When the value is read by calling MENU_get_transition()
  * this flag is cleared, respectively set to MENU_NONE.
  *****************************************************************************/
-MENU_item_t MENU_get_transition(void)
+/*MENU_item_t MENU_get_transition(void)
 {
 	MENU_item_t item = MENU_transition;
 	MENU_transition = MENU_NONE;
 	return item;
+}*/
+
+MENU_item_t MENU_get_transition(void)
+{
+	/*
+	MENU_item_t item = MENU_transition;
+	MENU_transition = MENU_NONE;
+	return item;
+	*/
+	return MENU_transition;
 }
+
 
 
 /** ***************************************************************************
@@ -165,13 +180,13 @@ MENU_item_t MENU_get_transition(void)
  * in the touch controller compared to the display.
  * Uncomment or comment the <b>\#define EVAL_REV_E</b> in main.h accordingly.
  *****************************************************************************/
+
 void MENU_check_transition(void)
 {
 	static MENU_item_t item_old = MENU_NONE;
 	static MENU_item_t item_new = MENU_NONE;
 	static TS_StateTypeDef  TS_State;	// State of the touch controller
 	BSP_TS_GetState(&TS_State);			// Get the state
-
 
 // Evalboard revision E (blue) has an inverted y-axis in the touch controller
 #ifdef EVAL_REV_E
@@ -192,10 +207,80 @@ void MENU_check_transition(void)
 #endif
 */
 	if (TS_State.TouchDetected) {		// If a touch was detected
-		/* Do only if last transition not pending anymore */
+		//current_time = 0;
+//		sprintf(msg, "Touch detected\r\n");
+//		HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+		/*
+		// Do only if last transition not pending anymore
+
 		if (MENU_NONE == MENU_transition) {
 			item_old = item_new;		// Store old item
-			/* If touched within the menu bar? */
+			// If touched within the menu bar?
+			if ((MENU_Y < TS_State.Y) && (MENU_Y+MENU_HEIGHT > TS_State.Y)) {
+				item_new = TS_State.X	// Calculate new item
+						/ (BSP_LCD_GetXSize()/MENU_ENTRY_COUNT);
+				if ((0 > item_new) || (MENU_ENTRY_COUNT <= item_new)) {
+					item_new = MENU_NONE;	// Out of bounds
+				}
+				if (item_new == item_old) {	// 2 times the same menu item
+					item_new = MENU_NONE;
+					MENU_transition = item_old;
+				}
+			}
+		}*/
+
+        item_old = item_new;           // Update old item
+        if ((MENU_Y < TS_State.Y) && (MENU_Y + MENU_HEIGHT > TS_State.Y)) {
+            item_new = TS_State.X / (BSP_LCD_GetXSize() / MENU_ENTRY_COUNT);
+            if ((item_new < 0) || (item_new >= MENU_ENTRY_COUNT)) {
+                item_new = MENU_NONE;  // Out of bounds
+            }
+            if (item_new == item_old) { // Handle same menu item touch
+                MENU_transition = item_old;
+            } else {
+                MENU_transition = item_new;
+            }
+        }
+
+
+	} else {
+//		sprintf(msg, "No touch detected\r\n");
+//		HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
+	}
+
+}
+/*
+void MENU_check_transition(void)
+{
+	static MENU_item_t item_old = MENU_NONE;
+	static MENU_item_t item_new = MENU_NONE;
+	static TS_StateTypeDef  TS_State;	// State of the touch controller
+	BSP_TS_GetState(&TS_State);			// Get the state
+
+
+// Evalboard revision E (blue) has an inverted y-axis in the touch controller
+#ifdef EVAL_REV_E
+	TS_State.Y = BSP_LCD_GetYSize() - TS_State.Y;	// Invert the y-axis
+#endif
+	// Invert x- and y-axis if LCD ist flipped
+#ifdef FLIPPED_LCD
+	TS_State.X = BSP_LCD_GetXSize() - TS_State.X;	// Invert the x-axis
+	TS_State.Y = BSP_LCD_GetYSize() - TS_State.Y;	// Invert the y-axis
+#endif
+
+
+
+//	#if (defined(EVAL_REV_E) && !defined(FLIPPED_LCD)) || (!defined(EVAL_REV_E) && defined(FLIPPED_LCD))
+//	TS_State.Y = BSP_LCD_GetYSize() - TS_State.Y;	// Invert the y-axis
+//#endif
+//#ifdef EVAL_REV_E
+//#endif
+
+	if (TS_State.TouchDetected) {		// If a touch was detected
+		// Do only if last transition not pending anymore
+		if (MENU_NONE == MENU_transition) {
+			item_old = item_new;		// Store old item
+			// If touched within the menu bar?
 			if ((MENU_Y < TS_State.Y) && (MENU_Y+MENU_HEIGHT > TS_State.Y)) {
 				item_new = TS_State.X	// Calculate new item
 						/ (BSP_LCD_GetXSize()/MENU_ENTRY_COUNT);
@@ -211,7 +296,7 @@ void MENU_check_transition(void)
 	}
 }
 
-
+*/
 
 /** ***************************************************************************
  * @brief Interrupt handler for the touchscreen

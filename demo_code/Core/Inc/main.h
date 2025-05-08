@@ -8,15 +8,20 @@
 #define MAIN_H_
 
 
+
+
 /******************************************************************************
  * Includes
  *****************************************************************************/
-
+#include "stm32f4xx_hal.h"
+#include <stdbool.h>
+#include "arm_math.h"
 
 /******************************************************************************
  * Defines
  *****************************************************************************/
-
+void Error_Handler(void);
+extern UART_HandleTypeDef huart1;
 /** ***************************************************************************
  * Evalboard revision E (blue PCB)
  * has an inverted y-axis in the touch controller compared to the display.

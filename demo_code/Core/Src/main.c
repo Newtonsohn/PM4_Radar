@@ -19,6 +19,8 @@
 #include "stm32f429i_discovery.h"
 #include "stm32f429i_discovery_lcd.h"
 #include "stm32f429i_discovery_ts.h"
+#include <stdio.h>
+
 
 #include "main.h"
 #include "pushbutton.h"
@@ -41,6 +43,10 @@
  *****************************************************************************/
 static void SystemClock_Config(void);	///< System Clock Configuration
 static void gyro_disable(void);			///< Disable the onboard gyroscope
+static void MX_GPIO_Init(void);
+static void MX_USART1_UART_Init(void);
+static uint8_t active_menu = MENU_NONE;
+UART_HandleTypeDef huart1;
 
 
 /** ***************************************************************************
@@ -51,8 +57,15 @@ static void gyro_disable(void);			///< Disable the onboard gyroscope
  *****************************************************************************/
 int main(void) {
 	HAL_Init();							// Initialize the system
-
 	SystemClock_Config();				// Configure system clocks
+	MX_GPIO_Init();
+	MX_USART1_UART_Init();
+
+	char msg[50];
+    uint8_t previous_menu = MENU_NONE;  // Tracks the last active menu
+
+    sprintf(msg, "Hello World\r\n");    // Convert MEAS_data_ready to a string
+    HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);	// Transmit the message over UART
 
 #ifdef FLIPPED_LCD
 	BSP_LCD_Init_Flipped();				// Initialize the LCD for flipped orientation
@@ -63,10 +76,7 @@ int main(void) {
 	BSP_LCD_SelectLayer(LCD_FOREGROUND_LAYER);
 	BSP_LCD_DisplayOn();
 	BSP_LCD_Clear(LCD_COLOR_WHITE);
-
 	BSP_TS_Init(BSP_LCD_GetXSize(), BSP_LCD_GetYSize());	// Touchscreen
-	/* Uncomment next line to enable touchscreen interrupt */
-	// BSP_TS_ITConfig();					// Enable Touchscreen interrupt
 
 	PB_init();							// Initialize the user pushbutton
 	PB_enableIRQ();						// Enable interrupt on user pushbutton
@@ -81,41 +91,47 @@ int main(void) {
 
 	MEAS_GPIO_analog_init();			// Configure GPIOs in analog mode
 	MEAS_timer_init();					// Configure the timer
-	FFT_init();  // Nach MEAS_timer_init()
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
+	FFT_init();  						// Nach MEAS_timer_init()
 
 	/* Infinite while loop */
 	while (1) {							// Infinitely loop in main function
 		BSP_LED_Toggle(LED3);			// Visual feedback when running
 
+	    sprintf(msg, "active menu: %d\r\n", active_menu);    // Convert MEAS_data_ready to a string
+	    HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);	// Transmit the message over UART
+
 		if (MEAS_data_ready) {			// Show data if new data available
 			MEAS_data_ready = false;
-			MEAS_show_data();
 		}
 
-		if (PB_pressed()) {				// Check if user pushbutton was pressed
-			DAC_active = !DAC_active;	// Toggle DAC on/<<<<<<<<<<<<<<<<<<<<<<off
-			if (DAC_active) {
-				DAC_init();
-				BSP_LED_On(LED4);
-			} else {
-				DAC_reset();
-				BSP_LED_Off(LED4);
-			}
+		if(active_menu == MENU_ZERO){
+		    sprintf(msg, "Showing data\r\n");    // Convert MEAS_data_ready to a string
+		    HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);	// Transmit the message over UART
+		    show_data_menu_zero();
 		}
 
-		/* Comment next line if touchscreen interrupt is enabled */
+		if(active_menu == MENU_ONE){
+			sprintf(msg, "Showing data\r\n");    // Convert MEAS_data_ready to a string
+			HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);	// Transmit the message over UART
+			show_data_menu_one();
+        }
+
 		MENU_check_transition();
 
 		switch (MENU_get_transition()) {	// Handle user menu choice
-		case MENU_NONE:					// No transition => do nothing
+		case MENU_NONE:
+            active_menu = MENU_NONE;
 			break;
 		case MENU_ZERO:
+            active_menu = MENU_ZERO;
 			ADC1_IN14_ADC2_IN15_dual_init();
 			ADC1_IN14_ADC2_IN15_dual_start();
 			break;
 		case MENU_ONE:
-			ADC3_IN4_timer_init();
-			ADC3_IN4_timer_start();
+            active_menu = MENU_ONE;
+			ADC1_IN14_ADC2_IN15_dual_init();
+			ADC1_IN14_ADC2_IN15_dual_start();
 			break;
 		case MENU_TWO:
 			ADC3_IN4_DMA_init();
@@ -218,3 +234,49 @@ __attribute__((weak)) void _lseek(void){}
 __attribute__((weak)) void _read(void){}
 __attribute__((weak)) void _write(void){}
 
+static void MX_USART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART1_Init 0 */
+
+  /* USER CODE END USART1_Init 0 */
+
+  /* USER CODE BEGIN USART1_Init 1 */
+
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 115200;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
+
+  /* USER CODE END USART1_Init 2 */
+}
+
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* User can add his own implementation to report the HAL error return state */
+  __disable_irq();
+  while (1)
+  {
+  }
+  /* USER CODE END Error_Handler_Debug */
+}
+
+static void MX_GPIO_Init(void)
+{
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+}
