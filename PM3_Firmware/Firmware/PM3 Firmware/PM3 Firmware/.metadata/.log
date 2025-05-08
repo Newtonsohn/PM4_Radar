@@ -1,0 +1,51 @@
+!SESSION 2024-12-01 12:25:07.502 -----------------------------------------------
+eclipse.buildId=Version 1.17.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=de_DE
+Framework arguments:  C:\Users\roche\OneDrive\Project PM3\Firmware\PM3 Firmware\PM3 Firmware\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 C:\Users\roche\OneDrive\Project PM3\Firmware\PM3 Firmware\PM3 Firmware\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-12-01 12:26:09.215
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-12-01 12:26:09.222
+!MESSAGE Log4j2 initialized with config file C:\Users\roche\OneDrive\Project PM3\Firmware\PM3 Firmware\PM3 Firmware\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-12-01 12:26:20.669
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.core.jobs 2 2 2024-12-01 12:26:31.557
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: org.eclipse.ui.internal.Workbench$39
+!SESSION 2024-12-01 12:26:55.400 -----------------------------------------------
+eclipse.buildId=Version 1.17.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=de_DE
+Framework arguments:  C:\Users\roche\OneDrive\Project PM3\Firmware\PM3 Firmware\PM3 Firmware\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 C:\Users\roche\OneDrive\Project PM3\Firmware\PM3 Firmware\PM3 Firmware\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-12-01 12:27:02.397
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-12-01 12:27:02.399
+!MESSAGE Log4j2 initialized with config file C:\Users\roche\OneDrive\Project PM3\Firmware\PM3 Firmware\PM3 Firmware\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-12-01 12:27:11.868
+!MESSAGE Started RMI Server, listening on port 41337
+!SESSION 2024-12-01 12:29:10.441 -----------------------------------------------
+eclipse.buildId=Version 1.17.0
+java.version=21.0.3
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=de_DE
+Framework arguments:  C:\Users\roche\OneDrive\Project PM3\Firmware\PM3 Firmware\PM3 Firmware\.project
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 C:\Users\roche\OneDrive\Project PM3\Firmware\PM3 Firmware\PM3 Firmware\.project
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-12-01 12:29:21.659
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-12-01 12:29:21.661
+!MESSAGE Log4j2 initialized with config file C:\Users\roche\OneDrive\Project PM3\Firmware\PM3 Firmware\PM3 Firmware\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-12-01 12:29:31.875
+!MESSAGE Started RMI Server, listening on port 41337

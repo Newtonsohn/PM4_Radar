@@ -1,0 +1,7 @@
+../Core/Src/menu.c:78:6:MENU_draw	2
+../Core/Src/menu.c:104:6:MENU_hint	1
+../Core/Src/menu.c:136:6:MENU_set_entry	2
+../Core/Src/menu.c:149:14:MENU_get_entry	2
+../Core/Src/menu.c:168:13:MENU_get_transition	1
+../Core/Src/menu.c:189:6:MENU_check_transition	6
+../Core/Src/menu.c:272:6:EXTI15_10_IRQHandler	3

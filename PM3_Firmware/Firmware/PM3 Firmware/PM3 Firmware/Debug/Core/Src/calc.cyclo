@@ -1,0 +1,5 @@
+../Core/Src/calc.c:93:7:calculate_moving_mean	4
+../Core/Src/calc.c:137:6:rms	2
+../Core/Src/calc.c:174:7:calculate_current	3
+../Core/Src/calc.c:205:7:calculate_distance	3
+../Core/Src/calc.c:234:7:calculate_angle	1

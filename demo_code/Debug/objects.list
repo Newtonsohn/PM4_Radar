@@ -33,6 +33,7 @@
 "./Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery_lcd.o"
 "./Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery_sdram.o"
 "./Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery_ts.o"
+"./Drivers/CMSIS/DSP/Source/arm_cfft_init_f32.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o"
 "./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_crc.o"

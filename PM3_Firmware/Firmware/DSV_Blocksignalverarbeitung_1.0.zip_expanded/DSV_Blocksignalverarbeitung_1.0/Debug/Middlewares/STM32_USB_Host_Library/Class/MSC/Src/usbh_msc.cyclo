@@ -1,0 +1,12 @@
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:149:27:USBH_MSC_InterfaceInit	4
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:235:20:USBH_MSC_InterfaceDeInit	4
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:269:27:USBH_MSC_ClassRequest	9
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:325:27:USBH_MSC_Process	28
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:511:27:USBH_MSC_SOFProcess	1
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:523:27:USBH_MSC_RdWrProcess	14
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:617:10:USBH_MSC_IsReady	2
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:637:9:USBH_MSC_GetMaxLUN	3
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:655:10:USBH_MSC_UnitIsReady	2
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:676:20:USBH_MSC_GetLUNInfo	2
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:700:20:USBH_MSC_Read	7
+../Middlewares/STM32_USB_Host_Library/Class/MSC/Src/usbh_msc.c:748:20:USBH_MSC_Write	7

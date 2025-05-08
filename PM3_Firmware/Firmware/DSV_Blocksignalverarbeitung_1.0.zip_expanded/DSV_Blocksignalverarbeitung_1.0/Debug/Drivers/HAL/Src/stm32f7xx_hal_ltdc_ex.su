@@ -1,0 +1,2 @@
+../Drivers/HAL/Src/stm32f7xx_hal_ltdc_ex.c:86:19:HAL_LTDC_StructInitFromVideoConfig	16	static
+../Drivers/HAL/Src/stm32f7xx_hal_ltdc_ex.c:122:19:HAL_LTDC_StructInitFromAdaptedCommandConfig	16	static

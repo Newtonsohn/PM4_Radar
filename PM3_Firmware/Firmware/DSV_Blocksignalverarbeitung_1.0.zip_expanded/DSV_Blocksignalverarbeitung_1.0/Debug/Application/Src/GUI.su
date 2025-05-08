@@ -1,0 +1,22 @@
+C:/Users/Lucas/OneDrive/Dokumente/ZHAW Studium Unterlagen/5. Semester/PM3/Project PM3/Firmware/DSV_Blocksignalverarbeitung_1.0.zip_expanded/DSV_Blocksignalverarbeitung_1.0/Drivers/CMSIS/Include/core_cm7.h:2268:22:SCB_CleanInvalidateDCache	24	static,ignoring_inline_asm
+../Application/Src/GUI.c:104:6:initGUI	8	static
+../Application/Src/GUI.c:140:6:initPage1	112	static
+../Application/Src/GUI.c:176:6:initPage2	8	static
+../Application/Src/GUI.c:184:6:initPage3	8	static
+../Application/Src/GUI.c:192:6:initPage4	8	static
+../Application/Src/GUI.c:199:6:initPage5	152	static
+../Application/Src/GUI.c:320:6:checkButtonsPage1	16	static
+../Application/Src/GUI.c:448:6:checkButtonsPage2	16	static
+../Application/Src/GUI.c:497:6:checkButtonsPage3	16	static
+../Application/Src/GUI.c:546:6:checkButtonsPage4	8	static
+../Application/Src/GUI.c:616:6:checkButtonsPage5	4	static
+../Application/Src/GUI.c:627:6:updatePage1	144	static
+../Application/Src/GUI.c:817:6:updatePage2	136	static,ignoring_inline_asm
+../Application/Src/GUI.c:953:6:updatePage3	32904	static,ignoring_inline_asm
+../Application/Src/GUI.c:1118:6:updatePage4	8	static
+../Application/Src/GUI.c:1126:6:updatePage5	4	static
+../Application/Src/GUI.c:1139:6:drawTitle	112	static
+../Application/Src/GUI.c:1205:6:checkPageSwitchButtons	8	static
+../Application/Src/GUI.c:1282:13:drawButtonRow	16	static
+../Application/Src/GUI.c:1315:13:drawWaveGenWaveforms	112	static
+../Application/Src/GUI.c:1426:13:drawWaveGenInfo	112	static

@@ -1,0 +1,4 @@
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_ts.c:162:9:BSP_TS_Init	6
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_ts.c:223:9:BSP_TS_ITConfig	1
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_ts.c:257:9:BSP_TS_GetState	9
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_ts.c:446:13:BSP_TS_INT_MspInit	1

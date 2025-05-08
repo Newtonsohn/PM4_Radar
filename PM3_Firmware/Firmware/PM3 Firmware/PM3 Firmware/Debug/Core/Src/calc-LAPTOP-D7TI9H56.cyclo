@@ -1,0 +1,8 @@
+../Core/Src/calc-LAPTOP-D7TI9H56.c:108:7:calculate_moving_mean	4
+../Core/Src/calc-LAPTOP-D7TI9H56.c:138:6:rms	2
+../Core/Src/calc-LAPTOP-D7TI9H56.c:160:7:calculate_current	3
+../Core/Src/calc-LAPTOP-D7TI9H56.c:177:7:calculate_distance	3
+../Core/Src/calc-LAPTOP-D7TI9H56.c:193:7:calculate_angle	1
+../Core/Src/calc-LAPTOP-D7TI9H56.c:226:6:init_bandpass_filter	1
+../Core/Src/calc-LAPTOP-D7TI9H56.c:231:6:process_signal	1
+../Core/Src/calc-LAPTOP-D7TI9H56.c:236:6:filter_channels	5

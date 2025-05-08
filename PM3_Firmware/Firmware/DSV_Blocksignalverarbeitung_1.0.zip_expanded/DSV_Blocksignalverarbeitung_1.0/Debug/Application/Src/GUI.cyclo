@@ -1,0 +1,22 @@
+C:/Users/Lucas/OneDrive/Dokumente/ZHAW Studium Unterlagen/5. Semester/PM3/Project PM3/Firmware/DSV_Blocksignalverarbeitung_1.0.zip_expanded/DSV_Blocksignalverarbeitung_1.0/Drivers/CMSIS/Include/core_cm7.h:2268:22:SCB_CleanInvalidateDCache	3
+../Application/Src/GUI.c:104:6:initGUI	1
+../Application/Src/GUI.c:140:6:initPage1	1
+../Application/Src/GUI.c:176:6:initPage2	1
+../Application/Src/GUI.c:184:6:initPage3	1
+../Application/Src/GUI.c:192:6:initPage4	1
+../Application/Src/GUI.c:199:6:initPage5	2
+../Application/Src/GUI.c:320:6:checkButtonsPage1	30
+../Application/Src/GUI.c:448:6:checkButtonsPage2	16
+../Application/Src/GUI.c:497:6:checkButtonsPage3	16
+../Application/Src/GUI.c:546:6:checkButtonsPage4	35
+../Application/Src/GUI.c:616:6:checkButtonsPage5	1
+../Application/Src/GUI.c:627:6:updatePage1	8
+../Application/Src/GUI.c:817:6:updatePage2	15
+../Application/Src/GUI.c:953:6:updatePage3	18
+../Application/Src/GUI.c:1118:6:updatePage4	1
+../Application/Src/GUI.c:1126:6:updatePage5	1
+../Application/Src/GUI.c:1139:6:drawTitle	6
+../Application/Src/GUI.c:1205:6:checkPageSwitchButtons	21
+../Application/Src/GUI.c:1282:13:drawButtonRow	3
+../Application/Src/GUI.c:1315:13:drawWaveGenWaveforms	4
+../Application/Src/GUI.c:1426:13:drawWaveGenInfo	1

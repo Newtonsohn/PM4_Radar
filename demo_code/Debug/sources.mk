@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (12.3.rel1)
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
 ELF_SRCS := 
@@ -46,5 +46,6 @@ Drivers/BSP/Components/stmpe811 \
 Drivers/BSP/Components/ts3510 \
 Drivers/BSP/Components/wm8994 \
 Drivers/BSP/STM32F429I-Discovery \
+Drivers/CMSIS/DSP/Source \
 Drivers/STM32F4xx_HAL_Driver/Src \
 

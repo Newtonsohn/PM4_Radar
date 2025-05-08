@@ -1,0 +1,31 @@
+86^done
+(gdb) 
+41^done
+(gdb) 
+~"$logging_file = \"C:/DSV_Praktikum_Lab/SVN/export1.txt\""
+~"\n"
+~"$bpnum = 3"
+~"\n"
+~"$_probe_arg11 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg10 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg9 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg8 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg7 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg6 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg5 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg4 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg3 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg2 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg1 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_arg0 = <error: No probe at PC 0x08001698>\n"
+~"$_probe_argc = <error: No probe at PC 0x08001698>\n"
+~"$_thread = 1"
+~"\n"
+~"$_siginfo = void"
+~"\n"
+~"$_isvoid = <internal function _isvoid>\n"
+~"$_exception = <error: not stopped at a C++ exception catchpoint>\n"
+~"$_sdata = void"
+~"\n"
+42^done
+(gdb) 

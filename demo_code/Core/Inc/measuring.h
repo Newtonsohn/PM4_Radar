@@ -14,6 +14,9 @@
  * Includes
  *****************************************************************************/
 #include <stdbool.h>
+#include "menu.h"  // Header wo MENU_get_transition deklariert ist
+#include "arm_math.h"
+#include "arm_const_structs.h"
 
 
 /******************************************************************************
@@ -23,6 +26,9 @@ extern bool MEAS_data_ready;
 extern uint32_t MEAS_input_count;
 extern bool DAC_active;
 
+extern float32_t fft_input[FFT_SIZE*2];
+extern float32_t fft_output[FFT_SIZE];
+extern uint32_t fft_mag[FFT_SIZE/2];
 
 /******************************************************************************
  * Functions
@@ -47,6 +53,7 @@ void ADC3_IN13_IN4_scan_init(void);
 void ADC3_IN13_IN4_scan_start(void);
 
 void MEAS_show_data(void);
+void FFT_init(void);
 
 
 #endif

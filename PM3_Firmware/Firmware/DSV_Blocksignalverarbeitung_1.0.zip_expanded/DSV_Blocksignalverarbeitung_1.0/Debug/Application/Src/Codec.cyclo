@@ -1,0 +1,6 @@
+../Application/Src/Codec.c:86:9:initCodec	2
+../Application/Src/Codec.c:121:6:DMA2_Stream4_IRQHandler	1
+../Application/Src/Codec.c:138:6:BSP_AUDIO_OUT_TransferComplete_CallBack	5
+../Application/Src/Codec.c:181:6:BSP_AUDIO_OUT_HalfTransfer_CallBack	4
+../Application/Src/Codec.c:211:6:BSP_AUDIO_IN_TransferComplete_CallBack	13
+../Application/Src/Codec.c:288:6:BSP_AUDIO_IN_HalfTransfer_CallBack	14

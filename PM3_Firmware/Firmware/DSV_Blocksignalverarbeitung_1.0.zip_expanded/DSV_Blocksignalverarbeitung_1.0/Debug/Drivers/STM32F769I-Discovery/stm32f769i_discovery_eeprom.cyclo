@@ -1,0 +1,7 @@
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_eeprom.c:154:10:BSP_EEPROM_Init	3
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_eeprom.c:177:9:BSP_EEPROM_DeInit	1
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_eeprom.c:198:10:BSP_EEPROM_ReadBuffer	2
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_eeprom.c:245:10:BSP_EEPROM_WritePage	3
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_eeprom.c:280:10:BSP_EEPROM_WriteBuffer	19
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_eeprom.c:437:10:BSP_EEPROM_WaitEepromStandbyState	2
+../Drivers/STM32F769I-Discovery/stm32f769i_discovery_eeprom.c:453:13:BSP_EEPROM_TIMEOUT_UserCallback	1

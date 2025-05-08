@@ -1,0 +1,237 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file           : main.c
+  * @brief          : Main program body
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2025 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+
+#include "main.h"
+#include "cmsis_os.h"
+#include "app_touchgfx.h"
+#include "arm_math.h"
+#include "arm_const_structs.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+/* USER CODE BEGIN PTD */
+typedef enum {
+    STATE_ARMED_IDLE,
+    STATE_ARMED_TRIGGERED,
+    STATE_DISARMED,
+    STATE_ALARM
+} AlarmState_t;
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+/* USER CODE BEGIN PD */
+#define FFT_SIZE 256
+#define MOTION_THRESHOLD 10000.0f
+#define COUNTDOWN_DURATION 10000 // 10 Sekunden
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc2;
+TIM_HandleTypeDef htim1;
+/* USER CODE BEGIN PV */
+osThreadId_t defaultTaskHandle;
+float if_i_buffer[FFT_SIZE];
+float if_q_buffer[FFT_SIZE];
+float fft_input[2 * FFT_SIZE];
+AlarmState_t alarmState = STATE_ARMED_IDLE;
+uint32_t countdown_start_time = 0;
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
+static void MX_ADC1_Init(void);
+static void MX_ADC2_Init(void);
+static void MX_TIM1_Init(void);
+void StartDefaultTask(void *argument);
+/* USER CODE BEGIN PFP */
+void collect_samples(void);
+void prepare_fft_input(void);
+void perform_fft(void);
+bool detect_motion_fft(void);
+void alarm_start(void);
+void alarm_stop(void);
+void alarm_pulse(void);
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+/* USER CODE END 0 */
+
+int main(void)
+{
+  HAL_Init();
+
+  SystemClock_Config();
+
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_ADC1_Init();
+  MX_ADC2_Init();
+  MX_TIM1_Init();
+  MX_TouchGFX_Init();
+  MX_TouchGFX_PreOSInit();
+
+  osKernelInitialize();
+
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, NULL);
+
+  osKernelStart();
+
+  while (1)
+  {
+  }
+}
+
+/* USER CODE BEGIN 4 */
+
+void MX_TIM1_Init(void)
+{
+    __HAL_RCC_TIM1_CLK_ENABLE();
+
+    TIM_OC_InitTypeDef sConfigOC = {0};
+
+    htim1.Instance = TIM1;
+    htim1.Init.Prescaler = 84-1;
+    htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+    htim1.Init.Period = 500-1;
+    htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+    htim1.Init.RepetitionCounter = 0;
+    htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+    HAL_TIM_PWM_Init(&htim1);
+
+    sConfigOC.OCMode = TIM_OCMODE_PWM1;
+    sConfigOC.Pulse = 250;
+    sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+    sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+    HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1);
+}
+
+void collect_samples(void)
+{
+    for (int i = 0; i < FFT_SIZE; i++)
+    {
+        HAL_ADC_Start(&hadc1);
+        HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+        if_i_buffer[i] = (float)HAL_ADC_GetValue(&hadc1);
+
+        HAL_ADC_Start(&hadc2);
+        HAL_ADC_PollForConversion(&hadc2, HAL_MAX_DELAY);
+        if_q_buffer[i] = (float)HAL_ADC_GetValue(&hadc2);
+    }
+}
+
+void prepare_fft_input(void)
+{
+    for (int i = 0; i < FFT_SIZE; i++)
+    {
+        fft_input[2*i] = if_i_buffer[i];
+        fft_input[2*i+1] = if_q_buffer[i];
+    }
+}
+
+void perform_fft(void)
+{
+    arm_cfft_instance_f32 S;
+    arm_cfft_init_f32(&S, FFT_SIZE);
+    arm_cfft_f32(&S, fft_input, 0, 1);
+    arm_cmplx_mag_f32(fft_input, if_i_buffer, FFT_SIZE);
+}
+
+bool detect_motion_fft(void)
+{
+    collect_samples();
+    prepare_fft_input();
+    perform_fft();
+
+    float energy = 0.0f;
+    for (int i = 5; i < 50; i++)
+    {
+        energy += if_i_buffer[i];
+    }
+
+    return (energy > MOTION_THRESHOLD);
+}
+
+void alarm_start()
+{
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+}
+
+void alarm_stop()
+{
+    HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+}
+
+void alarm_pulse()
+{
+    alarm_start();
+    HAL_Delay(200);
+    alarm_stop();
+    HAL_Delay(200);
+}
+
+void StartDefaultTask(void *argument)
+{
+  for(;;)
+  {
+    switch (alarmState)
+    {
+        case STATE_ARMED_IDLE:
+            if (detect_motion_fft()) {
+                countdown_start_time = HAL_GetTick();
+                alarmState = STATE_ARMED_TRIGGERED;
+                // GUI Info: Countdown starten
+            }
+            break;
+
+        case STATE_ARMED_TRIGGERED:
+            if (/* Hier PIN-Eingabe prüfen */ 0) {
+                alarmState = STATE_DISARMED;
+                // GUI Info: Alarm deaktiviert
+            }
+            else if ((HAL_GetTick() - countdown_start_time) > COUNTDOWN_DURATION) {
+                alarmState = STATE_ALARM;
+                // GUI Info: Alarm aktiv!
+            }
+            break;
+
+        case STATE_DISARMED:
+            alarm_stop();
+            break;
+
+        case STATE_ALARM:
+            alarm_pulse();
+            HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_9); // Beispiel: LED blinkt
+            break;
+    }
+    osDelay(10);
+  }
+}
+
+/* USER CODE END 4 */

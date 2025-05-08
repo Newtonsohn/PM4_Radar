@@ -1,0 +1,26 @@
+/**
+@mainpage Cable-Monitor
+
+This Code is a the firmware for the <b>Electronics-Project Modules</b>
+<b>ET.PM3: Cable-Monitor</b>, which is done
+@n in the <b>second year of the electronics engineering curriculum</b>
+at the School of Engineering of the Zurich University of Applied Sciences.
+
+<b>Abstract:</b>
+This documentation explains the firmware and documents the testing.
+
+
+@image html MainPage.jpg
+
+The template code is written for the evaluation board
+<b>32F429IDISCOVERY (Discovery kit with STM32F429ZI MCU)</b>.
+
+
+---
+@author  Hanspeter Hochreutener, hhrt@zhaw.ch
+@author  Rocheteau Thomas, linortho@students.zhaw.ch
+@author  Roggensinger Lucas, roggeluc@students.zhaw.ch
+@date	 26.12.2024
+
+@bug No known bugs.
+*/

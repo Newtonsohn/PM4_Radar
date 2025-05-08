@@ -62,6 +62,8 @@
 #include "stm32f429i_discovery_ts.h"
 
 #include "measuring.h"
+#include "arm_math.h"
+#include "arm_const_structs.h"
 
 /******************************************************************************
  * Defines
@@ -92,6 +94,77 @@ static uint32_t DAC_sample = 0;			///< DAC output value
  * Functions
  *****************************************************************************/
 
+// FFT Variablen
+arm_cfft_radix4_instance_f32 fft_inst;
+float32_t fft_input[FFT_SIZE*2];  // Complex input (I/Q)
+float32_t fft_output[FFT_SIZE];    // FFT Ergebnis
+uint32_t fft_mag[FFT_SIZE/2];     // Magnituden für die Darstellung
+
+void FFT_init(void) {
+    arm_cfft_radix4_init_f32(&fft_inst, FFT_SIZE, 0, 1);
+}
+
+void calculate_fft(void) {
+    // Fensterung (Hann Window)
+    for(uint16_t i=0; i<FFT_SIZE; i++) {
+        float32_t window = 0.5f * (1.0f - arm_cos_f32(2*PI*i/(FFT_SIZE-1)));
+        fft_input[2*i] *= window;   // I
+        fft_input[2*i+1] *= window; // Q
+    }
+
+    // FFT durchführen
+    arm_cfft_radix4_f32(&fft_inst, fft_input);
+
+    // Magnitude berechnen
+    arm_cmplx_mag_f32(fft_input, fft_output, FFT_SIZE);
+
+    // DC-Offset entfernen und normieren
+    float32_t max_value;
+    arm_max_f32(fft_output+1, FFT_SIZE/2-1, &max_value, NULL);
+
+    const float32_t scale = 200.0f / max_value;  // Skalierung für Display
+    for(uint16_t i=0; i<FFT_SIZE/2; i++) {
+        fft_mag[i] = (uint32_t)(fft_output[i] * scale);
+        if(fft_mag[i] > 200) fft_mag[i] = 200;
+    }
+}
+
+void ADC1_IN14_ADC2_IN15_dual_init(void)
+{
+    MEAS_input_count = 2;                // 2 inputs are converted
+    __HAL_RCC_ADC1_CLK_ENABLE();        // Enable Clock for ADC1
+    __HAL_RCC_ADC2_CLK_ENABLE();        // Enable Clock for ADC2
+
+    // Common ADC configuration
+    ADC->CCR |= ADC_CCR_DMA_1;            // Enable DMA mode 2 = dual DMA
+    ADC->CCR |= ADC_CCR_MULTI_1 | ADC_CCR_MULTI_2; // ADC1 and ADC2 simultaneous
+
+    // ADC1 configuration
+    ADC1->CR2 |= (1UL << ADC_CR2_EXTEN_Pos);    // Enable external trigger on rising edge
+    ADC1->CR2 |= (6UL << ADC_CR2_EXTSEL_Pos);   // Timer 2 TRGO event
+    ADC1->SQR3 |= (14UL << ADC_SQR3_SQ1_Pos);   // Input 14 = first conversion (changed from 13)
+
+    // ADC2 configuration
+    ADC2->SQR3 |= (15UL << ADC_SQR3_SQ1_Pos);   // Input 15 = first conversion (changed from 5)
+
+    // DMA configuration
+    __HAL_RCC_DMA2_CLK_ENABLE();        // Enable Clock for DMA2
+    DMA2_Stream4->CR &= ~DMA_SxCR_EN;    // Disable the DMA stream 4
+    while (DMA2_Stream4->CR & DMA_SxCR_EN) { ; }    // Wait for DMA to finish
+
+    DMA2->HIFCR |= DMA_HIFCR_CTCIF4;    // Clear transfer complete interrupt flag
+    DMA2_Stream4->CR |= (0UL << DMA_SxCR_CHSEL_Pos);    // Select channel 0
+    DMA2_Stream4->CR |= DMA_SxCR_PL_1;        // Priority high
+    DMA2_Stream4->CR |= DMA_SxCR_MSIZE_1;    // Memory data size = 32 bit
+    DMA2_Stream4->CR |= DMA_SxCR_PSIZE_1;    // Peripheral data size = 32 bit
+    DMA2_Stream4->CR |= DMA_SxCR_MINC;        // Increment memory address pointer
+    DMA2_Stream4->CR |= DMA_SxCR_TCIE;        // Transfer complete interrupt enable
+
+    DMA2_Stream4->NDTR = ADC_NUMS;        // Number of data items to transfer
+    DMA2_Stream4->PAR = (uint32_t)&ADC->CDR;    // Peripheral register address
+    DMA2_Stream4->M0AR = (uint32_t)ADC_samples;    // Buffer memory location address
+}
+
 
 /** ***************************************************************************
  * @brief Configure GPIOs in analog mode.
@@ -110,6 +183,9 @@ void MEAS_GPIO_analog_init(void)
 	GPIOC->MODER |= (3UL << GPIO_MODER_MODER3_Pos);	// Analog PC3 = ADC123_IN13
 	__HAL_RCC_GPIOA_CLK_ENABLE();		// Enable Clock for GPIO port A
 	GPIOA->MODER |= (3UL << GPIO_MODER_MODER5_Pos);	// Analog PA5 ADC12_IN5
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    // Für ADC1_IN14 (PC4) und ADC2_IN15 (PC5)
+    GPIOC->MODER |= (3UL << GPIO_MODER_MODER4_Pos) | (3UL << GPIO_MODER_MODER5_Pos);
 }
 
 
@@ -353,6 +429,17 @@ void ADC1_IN13_ADC2_IN5_dual_start(void)
 	TIM2->CR1 |= TIM_CR1_CEN;			// Enable timer
 }
 
+void ADC1_IN14_ADC2_IN15_dual_start(void)
+{
+    DMA2_Stream4->CR |= DMA_SxCR_EN;          // DMA-Stream aktivieren
+    NVIC_ClearPendingIRQ(DMA2_Stream4_IRQn);  // Ausstehende DMA-Interrupts löschen
+    NVIC_EnableIRQ(DMA2_Stream4_IRQn);        // DMA-Interrupt im NVIC aktivieren
+
+    ADC1->CR2 |= ADC_CR2_ADON;                // ADC1 einschalten
+    ADC2->CR2 |= ADC_CR2_ADON;                // ADC2 einschalten
+
+    TIM2->CR1 |= TIM_CR1_CEN;                 // Timer starten
+}
 
 /** ***************************************************************************
  * @brief Initialize ADC, timer and DMA for sequential acquisition = scan mode
@@ -589,48 +676,122 @@ void DMA2_Stream4_IRQHandler(void)
  *****************************************************************************/
 void MEAS_show_data(void)
 {
-	const uint32_t Y_OFFSET = 260;
-	const uint32_t X_SIZE = 240;
-	const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;	// Scaling factor
-	uint32_t data;
-	uint32_t data_last;
-	/* Clear the display */
-	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-	BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET+1);
-	/* Write first 2 samples as numbers */
-	BSP_LCD_SetFont(&Font24);
-	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	char text[16];
-	snprintf(text, 15, "1. sample %4d", (int)(ADC_samples[0]));
-	BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
-	snprintf(text, 15, "2. sample %4d", (int)(ADC_samples[1]));
-	BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
-	/* Draw the  values of input channel 1 as a curve */
-	BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-	data = ADC_samples[MEAS_input_count*0] / f;
-	for (uint32_t i = 1; i < ADC_NUMS; i++){
-		data_last = data;
-		data = (ADC_samples[MEAS_input_count*i]) / f;
-		if (data > Y_OFFSET) { data = Y_OFFSET; }// Limit value, prevent crash
-		BSP_LCD_DrawLine(4*(i-1), Y_OFFSET-data_last, 4*i, Y_OFFSET-data);
-	}
-	/* Draw the  values of input channel 2 (if present) as a curve */
-	if (MEAS_input_count == 2) {
-		BSP_LCD_SetTextColor(LCD_COLOR_RED);
-		data = ADC_samples[MEAS_input_count*0+1] / f;
-		for (uint32_t i = 1; i < ADC_NUMS; i++){
-			data_last = data;
-			data = (ADC_samples[MEAS_input_count*i+1]) / f;
-			if (data > Y_OFFSET) { data = Y_OFFSET; }// Limit value, prevent crash
-			BSP_LCD_DrawLine(4*(i-1), Y_OFFSET-data_last, 4*i, Y_OFFSET-data);
-		}
-	}
-	/* Clear buffer and flag */
-	for (uint32_t i = 0; i < ADC_NUMS; i++){
-		ADC_samples[2*i] = 0;
-		ADC_samples[2*i+1] = 0;
-	}
-	ADC_sample_count = 0;
+    static arm_cfft_radix4_instance_f32 fft_inst;
+    static bool fft_initialized = false;
+    const uint32_t FFT_SIZE = 512;
+    static float32_t fft_input[FFT_SIZE * 2];
+    static float32_t fft_output[FFT_SIZE];
+    const uint32_t SAMPLE_RATE = 2000; // Anpassen an Ihre tatsächliche Abtastrate
+
+    if (!fft_initialized) {
+        arm_cfft_radix4_init_f32(&fft_inst, FFT_SIZE, 0, 1);
+        fft_initialized = true;
+    }
+
+    if (MENU_get_transition() == MENU_ONE) { // FFT-Modus
+        // FFT mit den letzten Samples berechnen
+        uint32_t start_idx = (ADC_NUMS > FFT_SIZE) ? (ADC_NUMS - FFT_SIZE) : 0;
+
+        // I/Q-Daten in FFT-Input kopieren
+        for (uint32_t i = 0; i < FFT_SIZE; i++) {
+            if ((start_idx + i) < ADC_NUMS && MEAS_input_count == 2) {
+                fft_input[2 * i] = (float32_t)ADC_samples[2 * (start_idx + i)];     // I
+                fft_input[2 * i + 1] = (float32_t)ADC_samples[2 * (start_idx + i) + 1]; // Q
+            } else {
+                fft_input[2 * i] = 0;
+                fft_input[2 * i + 1] = 0;
+            }
+        }
+
+        // Fensterung (Hann Window)
+        for (uint16_t i = 0; i < FFT_SIZE; i++) {
+            float32_t window = 0.5f * (1.0f - arm_cos_f32(2 * PI * i / (FFT_SIZE - 1)));
+            fft_input[2 * i] *= window;
+            fft_input[2 * i + 1] *= window;
+        }
+
+        // FFT durchführen
+        arm_cfft_radix4_f32(&fft_inst, fft_input);
+
+        // Magnitude berechnen
+        arm_cmplx_mag_f32(fft_input, fft_output, FFT_SIZE);
+
+        // Display vorbereiten
+        BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+        BSP_LCD_FillRect(0, 0, 240, 320);
+        BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
+
+        // Maximalwert finden für Skalierung
+        float32_t max_value;
+        arm_max_f32(fft_output + 1, FFT_SIZE / 2 - 1, &max_value, NULL);
+        float32_t scale = 200.0f / (max_value + 0.001f); // +0.001 um Division durch 0 zu vermeiden
+
+        // FFT plotten
+        for (uint16_t i = 1; i < FFT_SIZE / 2; i++) {
+            uint16_t height = (uint16_t)(fft_output[i] * scale);
+            if (height > 200) height = 200;
+
+            uint16_t x = i * 240 / (FFT_SIZE / 2);
+            BSP_LCD_DrawLine(x, 300, x, 300 - height);
+        }
+
+        // Frequenzinformation anzeigen
+        BSP_LCD_SetFont(&Font16);
+        BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+        char text[32];
+        snprintf(text, sizeof(text), "Max Freq: %.1f Hz", max_value * SAMPLE_RATE / FFT_SIZE);
+        BSP_LCD_DisplayStringAt(0, 20, (uint8_t *)text, LEFT_MODE);
+
+    } else { // Originaler Zeitbereichsplot
+        const uint32_t Y_OFFSET = 260;
+        const uint32_t X_SIZE = 240;
+        const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;
+        uint32_t data;
+        uint32_t data_last;
+
+        /* Clear the display */
+        BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+        BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
+
+        /* Write first 2 samples as numbers */
+        BSP_LCD_SetFont(&Font24);
+        BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+        char text[16];
+        snprintf(text, 15, "1. sample %4d", (int)(ADC_samples[0]));
+        BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
+        snprintf(text, 15, "2. sample %4d", (int)(ADC_samples[1]));
+        BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
+
+        /* Draw the values of input channel 1 as a curve */
+        BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
+        data = ADC_samples[MEAS_input_count * 0] / f;
+        for (uint32_t i = 1; i < ADC_NUMS; i++) {
+            data_last = data;
+            data = (ADC_samples[MEAS_input_count * i]) / f;
+            if (data > Y_OFFSET) data = Y_OFFSET;
+            BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i, Y_OFFSET - data);
+        }
+
+        /* Draw the values of input channel 2 (if present) as a curve */
+        if (MEAS_input_count == 2) {
+            BSP_LCD_SetTextColor(LCD_COLOR_RED);
+            data = ADC_samples[MEAS_input_count * 0 + 1] / f;
+            for (uint32_t i = 1; i < ADC_NUMS; i++) {
+                data_last = data;
+                data = (ADC_samples[MEAS_input_count * i + 1]) / f;
+                if (data > Y_OFFSET) data = Y_OFFSET;
+                BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i, Y_OFFSET - data);
+            }
+        }
+    }
+
+    /* Clear buffer and flag */
+    for (uint32_t i = 0; i < ADC_NUMS; i++) {
+        ADC_samples[2 * i] = 0;
+        ADC_samples[2 * i + 1] = 0;
+    }
+    ADC_sample_count = 0;
 }
 

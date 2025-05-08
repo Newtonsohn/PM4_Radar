@@ -1,0 +1,34 @@
+/**
+@page testing Testing Firmware
+
+<h1>Firmware Tests according to requirements</h1>
+<table>
+<tr>
+	<th>Module</th><th>Test Conditions</th><th>Expected</th><th>Observed</th><th>Pass/Fail</th><th>Remarks</th>
+</tr>
+<tr>
+	<td rowspan=2>Menu system</td><td>Touch menu item "Location"</td><td>Switch to state "Location"</td><td>Switches to "Location"</td><td>Pass</th><td>Sluggish reaction => improve response speed</td>
+</tr>
+<tr>
+	<td>Touch menu item "Current"</td><td>Switch to state "Current"</td><td>Switches to "Current"</td><td>Pass</th><td>Sluggish reaction => improve response speed</td>
+</tr>
+<tr>
+	<td rowspan=2>Measurement accuracy</td><td>Touch menu item "Location"<br />Hold device close to a power line cable</td><td>reads distance and angle to cable in a defined accuracy</td><td>reads distance and angle to cable in a defined accuracy</td><td>Pass</th><td>-</td>
+</tr>
+<tr>
+	<td>Touch menu item "Current"<br />Hold device at the power line cable</td><td>reads distance and angle to cable in a defined accuracy</td><td>reads distance and angle to cable in a defined accuracy</td><td>Pass</th><td>-</td>
+</tr>
+<tr>
+	<td>Auto Turn off</td><td>Do not touch display and keep device still</td><td>shuts off after 60s</td><td>shuts off after 60s</td><td>Pass</th><td>-</td>
+</tr>
+</table>
+@n Test date: 13.12.2024
+@n Tester: <br />
+	&emsp;Rocheteau Thomas, linortho@students.zhaw.ch<br />
+	&emsp;Roggensinger Lucas, roggeluc@students.zhaw.ch
+
+---
+@author	Rocheteau Thomas, linortho@students.zhaw.ch<br />
+Roggensinger Lucas, roggeluc@students.zhaw.ch
+@date 26.12.2024
+*/

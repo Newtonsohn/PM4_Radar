@@ -1,0 +1,15 @@
+../Drivers/Components/wm8994/wm8994.c:138:10:wm8994_Init	40	static
+../Drivers/Components/wm8994/wm8994.c:735:6:wm8994_DeInit	8	static
+../Drivers/Components/wm8994/wm8994.c:746:10:wm8994_ReadID	16	static
+../Drivers/Components/wm8994/wm8994.c:760:10:wm8994_Play	24	static
+../Drivers/Components/wm8994/wm8994.c:776:10:wm8994_Pause	24	static
+../Drivers/Components/wm8994/wm8994.c:795:10:wm8994_Resume	24	static
+../Drivers/Components/wm8994/wm8994.c:819:10:wm8994_Stop	24	static
+../Drivers/Components/wm8994/wm8994.c:865:10:wm8994_SetVolume	24	static
+../Drivers/Components/wm8994/wm8994.c:941:10:wm8994_SetMute	24	static
+../Drivers/Components/wm8994/wm8994.c:976:10:wm8994_SetOutputMode	24	static
+../Drivers/Components/wm8994/wm8994.c:1063:10:wm8994_SetFrequency	24	static
+../Drivers/Components/wm8994/wm8994.c:1195:10:wm8994_Reset	24	static
+../Drivers/Components/wm8994/wm8994.c:1209:10:wm8994_SetOutputVolume_dB	24	static
+../Drivers/Components/wm8994/wm8994.c:1255:10:wm8994_SetInputVolume_dB	24	static
+../Drivers/Components/wm8994/wm8994.c:1301:16:CODEC_IO_Write	24	static

@@ -1,0 +1,7 @@
+../Core/Src/menu-LAPTOP-D7TI9H56.c:70:6:MENU_draw	40	static
+../Core/Src/menu-LAPTOP-D7TI9H56.c:96:6:MENU_hint	8	static
+../Core/Src/menu-LAPTOP-D7TI9H56.c:119:6:MENU_set_entry	24	static
+../Core/Src/menu-LAPTOP-D7TI9H56.c:132:14:MENU_get_entry	64	static
+../Core/Src/menu-LAPTOP-D7TI9H56.c:151:13:MENU_get_transition	4	static
+../Core/Src/menu-LAPTOP-D7TI9H56.c:172:6:MENU_check_transition	16	static
+../Core/Src/menu-LAPTOP-D7TI9H56.c:237:6:EXTI15_10_IRQHandler	8	static

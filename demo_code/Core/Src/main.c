@@ -81,6 +81,7 @@ int main(void) {
 
 	MEAS_GPIO_analog_init();			// Configure GPIOs in analog mode
 	MEAS_timer_init();					// Configure the timer
+	FFT_init();  // Nach MEAS_timer_init()
 
 	/* Infinite while loop */
 	while (1) {							// Infinitely loop in main function
@@ -92,7 +93,7 @@ int main(void) {
 		}
 
 		if (PB_pressed()) {				// Check if user pushbutton was pressed
-			DAC_active = !DAC_active;	// Toggle DAC on/off
+			DAC_active = !DAC_active;	// Toggle DAC on/<<<<<<<<<<<<<<<<<<<<<<off
 			if (DAC_active) {
 				DAC_init();
 				BSP_LED_On(LED4);
@@ -109,8 +110,8 @@ int main(void) {
 		case MENU_NONE:					// No transition => do nothing
 			break;
 		case MENU_ZERO:
-			ADC3_IN4_single_init();
-			ADC3_IN4_single_read();
+			ADC1_IN14_ADC2_IN15_dual_init();
+			ADC1_IN14_ADC2_IN15_dual_start();
 			break;
 		case MENU_ONE:
 			ADC3_IN4_timer_init();

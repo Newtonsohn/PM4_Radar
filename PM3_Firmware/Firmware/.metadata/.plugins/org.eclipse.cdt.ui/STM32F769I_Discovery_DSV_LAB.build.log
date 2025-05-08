@@ -1,0 +1,10 @@
+17:24:31 **** Incremental Build of configuration Debug for project STM32F769I_Discovery_DSV_LAB ****
+make all 
+arm-none-eabi-size  STM32F769I_Discovery.elf 
+   text	   data	    bss	    dec	    hex	filename
+ 286464	  85340	 312368	 684172	  a708c	STM32F769I_Discovery.elf
+Finished building: default.size.stdout
+ 
+
+17:24:33 Build Finished. 0 errors, 0 warnings. (took 2s.295ms)
+

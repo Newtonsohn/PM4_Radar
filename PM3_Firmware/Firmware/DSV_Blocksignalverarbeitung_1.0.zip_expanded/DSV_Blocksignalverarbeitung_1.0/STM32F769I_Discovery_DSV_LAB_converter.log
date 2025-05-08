@@ -1,0 +1,14 @@
+Project: STM32F769I_Discovery_DSV_LAB
+Converter: ST System Workbench for STM32 project converter
+Date: 20250403
+
+Option gnu.c.compiler.option.debugging.gprof is no longer supported
+Option gnu.c.compiler.option.debugging.codecov is no longer supported
+Option gnu.c.compiler.option.debugging.prof is no longer supported
+Option gnu.c.link.option.debugging.prof is no longer supported
+Option gnu.c.link.option.debugging.gprof is no longer supported
+Option gnu.c.link.option.debugging.codecov is no longer supported
+Option fr.ac6.managedbuild.tool.gnu.cross.cpp.linker.noexceptions is no longer supported
+Option fr.ac6.managedbuild.tool.gnu.cross.cpp.linker.nortti is no longer supported
+Unrecognized tool command 'as -mfloat-abi=hard' for tool id fr.ac6.managedbuild.tool.gnu.cross.assembler
+Unknown value type "" for id gnu.both.asm.option.include.paths on tool fr.ac6.managedbuild.tool.gnu.cross.assembler

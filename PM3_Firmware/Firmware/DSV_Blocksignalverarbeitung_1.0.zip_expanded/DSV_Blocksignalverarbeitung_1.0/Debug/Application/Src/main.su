@@ -1,0 +1,9 @@
+C:/Users/Lucas/OneDrive/Dokumente/ZHAW Studium Unterlagen/5. Semester/PM3/Project PM3/Firmware/DSV_Blocksignalverarbeitung_1.0.zip_expanded/DSV_Blocksignalverarbeitung_1.0/Drivers/CMSIS/Include/core_cm7.h:2073:22:SCB_EnableICache	4	static,ignoring_inline_asm
+C:/Users/Lucas/OneDrive/Dokumente/ZHAW Studium Unterlagen/5. Semester/PM3/Project PM3/Firmware/DSV_Blocksignalverarbeitung_1.0.zip_expanded/DSV_Blocksignalverarbeitung_1.0/Drivers/CMSIS/Include/core_cm7.h:2107:22:SCB_InvalidateICache	4	static,ignoring_inline_asm
+C:/Users/Lucas/OneDrive/Dokumente/ZHAW Studium Unterlagen/5. Semester/PM3/Project PM3/Firmware/DSV_Blocksignalverarbeitung_1.0.zip_expanded/DSV_Blocksignalverarbeitung_1.0/Drivers/CMSIS/Include/core_cm7.h:2123:22:SCB_EnableDCache	24	static,ignoring_inline_asm
+C:/Users/Lucas/OneDrive/Dokumente/ZHAW Studium Unterlagen/5. Semester/PM3/Project PM3/Firmware/DSV_Blocksignalverarbeitung_1.0.zip_expanded/DSV_Blocksignalverarbeitung_1.0/Drivers/CMSIS/Include/core_cm7.h:2198:22:SCB_InvalidateDCache	24	static,ignoring_inline_asm
+../Application/Src/main.c:138:5:main	128	static,ignoring_inline_asm
+../Application/Src/main.c:414:13:USBH_UserProcess	16	static
+../Application/Src/main.c:460:13:SystemClock_Config	88	static
+../Application/Src/main.c:514:13:MPU_Config	24	static
+../Application/Src/main.c:566:13:CPU_CACHE_Enable	8	static

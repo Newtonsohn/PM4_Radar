@@ -1,0 +1,10 @@
+../Core/Src/main-LAPTOP-D7TI9H56.c:66:5:main	12
+../Core/Src/main-LAPTOP-D7TI9H56.c:260:13:SystemClock_Config	1
+../Core/Src/main-LAPTOP-D7TI9H56.c:307:13:gyro_disable	1
+../Core/Src/main-LAPTOP-D7TI9H56.c:326:28:_close	1
+../Core/Src/main-LAPTOP-D7TI9H56.c:327:28:_lseek	1
+../Core/Src/main-LAPTOP-D7TI9H56.c:328:28:_read	1
+../Core/Src/main-LAPTOP-D7TI9H56.c:329:28:_write	1
+../Core/Src/main-LAPTOP-D7TI9H56.c:331:13:MX_USART1_UART_Init	2
+../Core/Src/main-LAPTOP-D7TI9H56.c:358:6:Error_Handler	1
+../Core/Src/main-LAPTOP-D7TI9H56.c:375:13:MX_GPIO_Init	1

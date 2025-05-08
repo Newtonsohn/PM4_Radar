@@ -1,0 +1,13 @@
+digraph "DAC_increment"
+{
+ // LATEX_PDF_SIZE
+  bgcolor="transparent";
+  edge [fontname=Helvetica,fontsize=10,labelfontname=Helvetica,labelfontsize=10];
+  node [fontname=Helvetica,fontsize=10,shape=box,height=0.2,width=0.4];
+  rankdir="RL";
+  Node1 [id="Node000001",label="DAC_increment",height=0.2,width=0.4,color="gray40", fillcolor="grey60", style="filled", fontcolor="black",tooltip="Increment the DAC value and write it to the output."];
+  Node1 -> Node2 [id="edge1_Node000001_Node000002",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node2 [id="Node000002",label="ADC3_IN4_single_read",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$measuring_8c.html#ab914f447426074c9498ed6a5902b7f73",tooltip="Read one single value of the ADC in single conversion mode."];
+  Node1 -> Node3 [id="edge2_Node000001_Node000003",dir="back",color="steelblue1",style="solid",tooltip=" "];
+  Node3 [id="Node000003",label="TIM2_IRQHandler",height=0.2,width=0.4,color="grey40", fillcolor="white", style="filled",URL="$measuring_8c.html#a38ad4725462bdc5e86c4ead4f04b9fc2",tooltip="Interrupt handler for the timer 2."];
+}

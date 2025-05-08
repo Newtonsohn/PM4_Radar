@@ -1,0 +1,30 @@
+89^done
+(gdb) 
+&"Undefined command: \"$logging_file\".  Try \"help\".\n"
+90^error,msg="Undefined command: \"$logging_file\".  Try \"help\"."
+(gdb) 
+&"No symbol \"expand\" in current context.\n"
+91^error,msg="No symbol \"expand\" in current context."
+(gdb) 
+~"$1 = 255 '\377'"
+~"\n"
+~"$2 = \"C:DSV_Praktikum_LabSVN\\033xport1.txt\""
+~"\n"
+92^done
+(gdb) 
+93^error,msg="-interpreter-exec: Usage: -interpreter-exec interp command"
+(gdb) 
+&"Too many array elements\n"
+94^error,msg="Too many array elements"
+(gdb) 
+~"Kill the program being debugged? (y or n) [answered Y; input not from terminal]\n"
+=thread-group-exited,id="i1"
+95^done
+(gdb) 
+96^error,msg="Invalid thread id: 1"
+(gdb) 
+97^error,msg="Invalid thread id: 1"
+(gdb) 
+98^done,groups=[{id="i1",type="process"}]
+(gdb) 
+99^exit
