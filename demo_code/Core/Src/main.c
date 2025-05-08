@@ -94,6 +94,7 @@ int main(void) {
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
 	FFT_init();  						// Nach MEAS_timer_init()
 
+
 	/* Infinite while loop */
 	while (1) {							// Infinitely loop in main function
 		BSP_LED_Toggle(LED3);			// Visual feedback when running

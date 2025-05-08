@@ -76,7 +76,7 @@
 #define TIM_CLOCK		84000000	///< APB1 timer clock frequency
 #define TIM_TOP			9			///< Timer top value
 #define TIM_PRESCALE	(TIM_CLOCK/ADC_FS/(TIM_TOP+1)-1) ///< Clock prescaler
-#define FFT_SIZE		512
+#define FFT_SIZE		60
 
 
 /******************************************************************************
@@ -106,30 +106,7 @@ void FFT_init(void) {
     arm_cfft_radix4_init_f32(&fft_inst, FFT_SIZE, 0, 1);
 }
 
-void calculate_fft(void) {
-    // Fensterung (Hann Window)
-    for(uint16_t i=0; i<FFT_SIZE; i++) {
-        float32_t window = 0.5f * (1.0f - arm_cos_f32(2*PI*i/(FFT_SIZE-1)));
-        fft_input[2*i] *= window;   // I
-        fft_input[2*i+1] *= window; // Q
-    }
 
-    // FFT durchführen
-    arm_cfft_radix4_f32(&fft_inst, fft_input);
-
-    // Magnitude berechnen
-    arm_cmplx_mag_f32(fft_input, fft_output, FFT_SIZE);
-
-    // DC-Offset entfernen und normieren
-    float32_t max_value;
-    arm_max_f32(fft_output+1, FFT_SIZE/2-1, &max_value, NULL);
-
-    const float32_t scale = 200.0f / max_value;  // Skalierung für Display
-    for(uint16_t i=0; i<FFT_SIZE/2; i++) {
-        fft_mag[i] = (uint32_t)(fft_output[i] * scale);
-        if(fft_mag[i] > 200) fft_mag[i] = 200;
-    }
-}
 
 void ADC1_IN14_ADC2_IN15_dual_init(void)
 {
@@ -676,38 +653,64 @@ void DMA2_Stream4_IRQHandler(void)
  * and should be moved to a separate file in the final version
  * because displaying is not related to measuring.
  *****************************************************************************/
+
+void calculate_fft(void) {
+    // Fensterung (Hann Window)
+    for(uint16_t i=0; i<FFT_SIZE; i++) {
+        float32_t window = 0.5f * (1.0f - arm_cos_f32(2*PI*i/(FFT_SIZE-1)));
+        fft_input[2*i] *= window;   // I
+        fft_input[2*i+1] *= window; // Q
+    }
+
+    // FFT durchführen
+    arm_cfft_radix4_f32(&fft_inst, fft_input);
+
+    // Magnitude berechnen
+    arm_cmplx_mag_f32(fft_input, fft_output, FFT_SIZE);
+
+    // DC-Offset entfernen und normieren
+    float32_t max_value;
+    arm_max_f32(fft_output+1, FFT_SIZE/2-1, &max_value, NULL);
+
+    const float32_t scale = 200.0f / max_value;  // Skalierung für Display
+    for(uint16_t i=0; i<FFT_SIZE/2; i++) {
+        fft_mag[i] = (uint32_t)(fft_output[i] * scale);
+        if(fft_mag[i] > 200) fft_mag[i] = 200;
+    }
+}
 void show_data_menu_one(void)
 {
-	const uint32_t SAMPLE_RATE = 2000; // Anpassen an Ihre tatsächliche Abtastrate
     const uint32_t Y_OFFSET = 260;
     const uint32_t X_SIZE = 240;
     const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;
-    //const uint32_t FFT_SIZE = 512;
     uint32_t data;
     uint32_t data_last;
-    static arm_cfft_radix4_instance_f32 fft_inst;
-    //static bool fft_initialized = false;
-    float32_t fft_input[FFT_SIZE * 2];
-    float32_t fft_output[FFT_SIZE];
+
 
     // Clear the display
     BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
     BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
 
-    uint32_t start_idx = (ADC_NUMS > FFT_SIZE) ? (ADC_NUMS - FFT_SIZE) : 0;
+    uint32_t valid_samples = (ADC_NUMS < FFT_SIZE) ? ADC_NUMS : FFT_SIZE;
 
-    // I/Q-Daten in FFT-Input kopieren
-    for (uint32_t i = 0; i < FFT_SIZE; i++) {
-    	if ((start_idx + i) < ADC_NUMS && MEAS_input_count == 2) {
-    		fft_input[2 * i] = (float32_t)ADC_samples[2 * (start_idx + i)];     // I
-            fft_input[2 * i + 1] = (float32_t)ADC_samples[2 * (start_idx + i) + 1]; // Q
-            } else {
-              fft_input[2 * i] = 0;
-              fft_input[2 * i + 1] = 0;
-               }
-           }
+    for (uint32_t i = 0; i < valid_samples; i++) {
+        if (MEAS_input_count == 2) {
+            fft_input[2 * i]     = (float32_t)ADC_samples[2 * i];       // I
+            fft_input[2 * i + 1] = (float32_t)ADC_samples[2 * i + 1];   // Q
+        } else {
+            fft_input[2 * i]     = (float32_t)ADC_samples[i];  // nur I
+            fft_input[2 * i + 1] = 0.0f;                        // Q = 0
+        }
+    }
 
-           // Fensterung (Hann Window)
+    // Zero Padding für restliche FFT-Eingänge
+    for (uint32_t i = valid_samples; i < FFT_SIZE; i++) {
+        fft_input[2 * i] = 0.0f;
+        fft_input[2 * i + 1] = 0.0f;
+    }
+
+
+    // Fensterung (Hann Window)
     for (uint16_t i = 0; i < FFT_SIZE; i++) {
     	float32_t window = 0.5f * (1.0f - arm_cos_f32(2 * PI * i / (FFT_SIZE - 1)));
         fft_input[2 * i] *= window;
@@ -736,7 +739,7 @@ void show_data_menu_one(void)
           if (height > 200) height = 200;
           {
         	  uint16_t x = i * 240 / (FFT_SIZE / 2);
-              BSP_LCD_DrawLine(x, 300, x, 300 - height);
+              BSP_LCD_DrawLine(x, 250, x, 250 - height);
           }
 		}
 
@@ -745,14 +748,13 @@ void show_data_menu_one(void)
      BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
      BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
      char text[32];
-     snprintf(text, sizeof(text), "Max Freq: %.1f Hz", max_value * SAMPLE_RATE / FFT_SIZE);
+     snprintf(text, sizeof(text), "Max Freq: %.1f Hz", max_value * ADC_FS / FFT_SIZE);
      BSP_LCD_DisplayStringAt(0, 20, (uint8_t *)text, LEFT_MODE);
 }
 
 
 void show_data_menu_zero(void)
 {
-	const uint32_t SAMPLE_RATE = 2000; // Anpassen an Ihre tatsächliche Abtastrate
     const uint32_t Y_OFFSET = 260;
     const uint32_t X_SIZE = 240;
     const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;

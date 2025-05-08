@@ -83,8 +83,8 @@ all: main-build
 main-build: demo_code_20240411.elf secondary-outputs
 
 # Tool invocations
-demo_code_20240411.elf demo_code_20240411.map: $(OBJS) $(USER_OBJS) C:\Users\roche\OneDrive\Dokumente\ZHAW\Sem_6\PM4\PM4_Radar\demo_code\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "demo_code_20240411.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\roche\OneDrive\Dokumente\ZHAW\Sem_6\PM4\PM4_Radar\demo_code\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="demo_code_20240411.map" -Wl,--gc-sections -static -L../Drivers/CMSIS/Lib/GCC --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+demo_code_20240411.elf demo_code_20240411.map: $(OBJS) $(USER_OBJS) C:\Users\Tommy\Documents\GitHub\PM4_Radar\demo_code\STM32F429ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "demo_code_20240411.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Tommy\Documents\GitHub\PM4_Radar\demo_code\STM32F429ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="demo_code_20240411.map" -Wl,--gc-sections -static -L../Drivers/CMSIS/Lib/GCC -u _printf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
