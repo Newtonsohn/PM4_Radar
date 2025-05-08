@@ -53,6 +53,12 @@ void ADC2_IN13_IN5_scan_start(void);
 void ADC3_IN13_IN4_scan_init(void);
 void ADC3_IN13_IN4_scan_start(void);
 
+float32_t FMCW_getPeakMangitudeFrequency(void);
+float32_t FMCW_getRadialVelocity(void);
+
+bool FMCW_calibrateFft(void);
+void FMCW_applyCalibrationFft(void);
+
 void MEAS_show_data(void);
 void FFT_init(void);
 

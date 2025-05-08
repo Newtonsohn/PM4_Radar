@@ -92,7 +92,7 @@ int main(void) {
 	MEAS_GPIO_analog_init();			// Configure GPIOs in analog mode
 	MEAS_timer_init();					// Configure the timer
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
-	FFT_init();  						// Nach MEAS_timer_init()
+	//FFT_init();  						// Nach MEAS_timer_init()
 
 
 	/* Infinite while loop */
@@ -103,6 +103,11 @@ int main(void) {
 	    HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);	// Transmit the message over UART
 
 		if (MEAS_data_ready) {			// Show data if new data available
+			if(active_menu == MENU_ONE){
+				sprintf(msg, "Showing data\r\n");    // Convert MEAS_data_ready to a string
+				HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);	// Transmit the message over UART
+				show_data_menu_one();
+	        }
 			MEAS_data_ready = false;
 		}
 
@@ -112,11 +117,7 @@ int main(void) {
 		    show_data_menu_zero();
 		}
 
-		if(active_menu == MENU_ONE){
-			sprintf(msg, "Showing data\r\n");    // Convert MEAS_data_ready to a string
-			HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);	// Transmit the message over UART
-			show_data_menu_one();
-        }
+
 
 		MENU_check_transition();
 
@@ -131,8 +132,10 @@ int main(void) {
 			break;
 		case MENU_ONE:
             active_menu = MENU_ONE;
-			ADC1_IN14_ADC2_IN15_dual_init();
-			ADC1_IN14_ADC2_IN15_dual_start();
+        	if (!MEAS_data_ready){
+        		ADC1_IN14_ADC2_IN15_dual_init();
+        		ADC1_IN14_ADC2_IN15_dual_start();
+        	}
 			break;
 		case MENU_TWO:
 			ADC3_IN4_DMA_init();

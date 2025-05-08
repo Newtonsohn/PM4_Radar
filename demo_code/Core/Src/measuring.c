@@ -69,26 +69,39 @@
  * Defines
  *****************************************************************************/
 #define ADC_DAC_RES		12			///< Resolution
-#define ADC_NUMS		60			///< Number of samples
-#define ADC_FS			600	///< Sampling freq. => 12 samples for a 50Hz period
+#define ADC_NUMS		256			///< Number of samples
+#define ADC_FS			5000	///< Sampling freq. => 12 samples for a 50Hz period
 #define ADC_CLOCK		84000000	///< APB2 peripheral clock frequency
 #define ADC_CLOCKS_PS	15			///< Clocks/sample: 3 hold + 12 conversion
 #define TIM_CLOCK		84000000	///< APB1 timer clock frequency
 #define TIM_TOP			9			///< Timer top value
 #define TIM_PRESCALE	(TIM_CLOCK/ADC_FS/(TIM_TOP+1)-1) ///< Clock prescaler
-#define FFT_SIZE		60
-
+#define SPEED_OF_LIGHT    3e8f            // Lichtgeschwindigkeit in m/s
+#define FMCW_CARRIER_HZ   24000000000.0f  // FMCW Trägerfrequenz z.B. 24 GHz
+#define FFT_SIZE   		ADC_NUMS		// No zero padding
+#define IFFT_FLAG 		0 	// Normal FFT
+#define DO_BIT_REVERSE 	1 // Unscramble fft bins
 
 /******************************************************************************
  * Variables
  *****************************************************************************/
 bool MEAS_data_ready = false;			///< New data is ready
-uint32_t MEAS_input_count = 1;			///< 1 or 2 input channels?
+uint32_t MEAS_input_count = 2;			///< 1 or 2 input channels?
 bool DAC_active = false;				///< DAC output active?
+bool FFT_data_ready = false;			///< New data is ready
 
 static uint32_t ADC_sample_count = 0;	///< Index for buffer
 static uint32_t ADC_samples[2*ADC_NUMS];///< ADC values of max. 2 input channels
 static uint32_t DAC_sample = 0;			///< DAC output value
+
+static float32_t Q_samples[FFT_SIZE];
+static float32_t I_samples[FFT_SIZE];
+static float32_t FFT_INOUT[2 * FFT_SIZE];
+static float32_t FFT_MAG[FFT_SIZE];
+
+#define VELOCITY_SMOOTH_WINDOW 5
+float32_t velocity_history[VELOCITY_SMOOTH_WINDOW] = {0};
+uint32_t velocity_index = 0;
 
 
 /******************************************************************************
@@ -96,15 +109,14 @@ static uint32_t DAC_sample = 0;			///< DAC output value
  *****************************************************************************/
 
 // FFT Variablen
-arm_cfft_radix4_instance_f32 fft_inst;
-float32_t fft_input[FFT_SIZE*2];  // Complex input (I/Q)
-float32_t fft_output[FFT_SIZE];    // FFT Ergebnis
-uint32_t fft_mag[FFT_SIZE/2];     // Magnituden für die Darstellung
+static float32_t FFT_INOUT[2*FFT_SIZE];
+static float32_t FFT_MAG[FFT_SIZE];
+static float32_t FFT_MAG_calibrate[FFT_SIZE];
+uint32_t calibrate_status;					// 0: Start calibration, 1: calibration in progress, 2: calibration complete
 
-
-void FFT_init(void) {
-    arm_cfft_radix4_init_f32(&fft_inst, FFT_SIZE, 0, 1);
-}
+//void FFT_init(void) {
+//    arm_cfft_radix4_init_f32(&fft_inst, FFT_SIZE, 0, 1);
+//}
 
 
 
@@ -641,117 +653,248 @@ void DMA2_Stream4_IRQHandler(void)
 }
 
 
-/** ***************************************************************************
- * @brief Draw buffer data as curves
- *
- * and write the first two samples as numbers.
- * @n After drawing, the buffer is cleared to get ready for the next run.
- * @note Drawing outside of the display crashes the system!
- * @todo Create new .h and .c files for calculating and displaying
- * of signals and results.
- * The code of this function was put into the same file for debugging purposes
- * and should be moved to a separate file in the final version
- * because displaying is not related to measuring.
- *****************************************************************************/
 
-void calculate_fft(void) {
-    // Fensterung (Hann Window)
-    for(uint16_t i=0; i<FFT_SIZE; i++) {
-        float32_t window = 0.5f * (1.0f - arm_cos_f32(2*PI*i/(FFT_SIZE-1)));
-        fft_input[2*i] *= window;   // I
-        fft_input[2*i+1] *= window; // Q
-    }
 
-    // FFT durchführen
-    arm_cfft_radix4_f32(&fft_inst, fft_input);
+void FMCW_prepareFft(void){
+	// Get FFT array into proper form
+	for (int n = 0; n < ADC_NUMS; n++) {
+			FFT_INOUT[n*2] = Q_samples[n];
+			FFT_INOUT[(n*2)+1] = I_samples[n];
+	}
+}
 
-    // Magnitude berechnen
-    arm_cmplx_mag_f32(fft_input, fft_output, FFT_SIZE);
+void FMCW_separateSamples(void){
+	float32_t Q_sum = 0;
+	float32_t I_sum = 0;
 
-    // DC-Offset entfernen und normieren
-    float32_t max_value;
-    arm_max_f32(fft_output+1, FFT_SIZE/2-1, &max_value, NULL);
+	// Separate Q and I Components of ADC Array
+	for (int n = 0; n < ADC_NUMS; n++) {
 
-    const float32_t scale = 200.0f / max_value;  // Skalierung für Display
-    for(uint16_t i=0; i<FFT_SIZE/2; i++) {
-        fft_mag[i] = (uint32_t)(fft_output[i] * scale);
-        if(fft_mag[i] > 200) fft_mag[i] = 200;
+		Q_samples[n] = (float32_t)(ADC_samples[n] & 0x0000FFFF);
+
+
+		I_samples[n] = (float32_t)((ADC_samples[n] >> 16) & 0x0000FFFF);
+
+		//// Simulation
+		//float32_t t = (float32_t)n / ADC_FS;
+		//Q_samples[n] = (float32_t)100.0*(float32_t)sinf(2 * PI * 1000 * t);  // Sine on Q
+		//I_samples[n] = (float32_t)100.0*(float32_t)cosf(2 * PI * 1000 * t);  // Cosine on I
+
+		// Sum of all Q and I values
+		Q_sum = Q_sum + Q_samples[n];
+		I_sum = I_sum + I_samples[n];
+	}
+
+	// Remove DC offset
+	Q_sum = Q_sum / ADC_NUMS;
+	I_sum = I_sum / ADC_NUMS;
+
+	for (int n = 0; n < ADC_NUMS; n++) {
+		Q_samples[n] = Q_samples[n] - Q_sum;
+		I_samples[n] = I_samples[n] - I_sum;
+	}
+}
+
+void FMCW_applyHanningWindow(void) {
+    for (int n = 0; n < ADC_NUMS; n++) {
+        float32_t window = 0.5f * (1.0f - arm_cos_f32((2.0f * PI * n) / (ADC_NUMS - 1)));
+        I_samples[n] *= window;
+        Q_samples[n] *= window;
     }
 }
-void show_data_menu_one(void)
+
+void FMCW_doFft(void){
+	arm_cfft_instance_f32 cfft_instance;
+	arm_cfft_init_f32(&cfft_instance, FFT_SIZE);
+	arm_cfft_f32(&cfft_instance, FFT_INOUT, IFFT_FLAG, DO_BIT_REVERSE);
+}
+
+void FMCW_convertFftToMagnitude(void){
+	 // Convert complex FFT to magnitude
+	for (int i = 0; i < FFT_SIZE; i++) {
+		float real = FFT_INOUT[2 * i];
+		float imag = FFT_INOUT[2 * i + 1];
+		FFT_MAG[i] = sqrtf(real * real + imag * imag);  // or use hypotf(real, imag)
+	}
+}
+
+float32_t FMCW_getPeakMangitudeFrequency(void) {
+    float32_t max_magnitude = 0.0f;
+    int max_index = 0;
+    int filter = 2;
+
+    // Find peak magnitude and its index (ignoring edges if needed)
+    for (int i = 0; i < FFT_SIZE; i++) {
+        if ((FFT_MAG[i] > max_magnitude)&&((i < FFT_SIZE/2-filter)||(i > FFT_SIZE/2+filter))) {
+            max_magnitude = FFT_MAG[i];
+            max_index = i;
+        }
+    }
+
+    // Convert bin index to signed frequency
+    int shifted_index = (max_index < FFT_SIZE / 2) ? max_index : (max_index - FFT_SIZE);
+    float32_t bin_resolution = (float32_t)ADC_FS / (float32_t)FFT_SIZE;
+    float32_t max_frequency = shifted_index * bin_resolution;
+
+    // Optional: Display on LCD
+    char text_[32];
+    snprintf(text_, sizeof(text_), "Freq: %+6.1f Hz", max_frequency);
+    BSP_LCD_DisplayStringAt(0, 210, (uint8_t*)text_, CENTER_MODE);
+
+    return max_frequency;
+}
+
+float32_t FMCW_getRadialVelocity(void) {
+    float32_t max_magnitude = 0.0f;
+    int max_index = 0;
+    const float32_t MIN_PEAK_THRESHOLD = 2000.0f; // Adjust based on your signal level
+    int filter = 2;
+    char text_[32];
+
+        // Find peak magnitude and its index (ignoring edges if needed)
+    for (int i = 0; i < FFT_SIZE; i++) {
+    	if ((FFT_MAG[i] > max_magnitude)&&((i < FFT_SIZE/2-filter)||(i > FFT_SIZE/2+filter))&&(i != 0)) {
+            max_magnitude = FFT_MAG[i];
+            max_index = i;
+        }
+    }
+
+    // If the peak is too small, consider it noise
+    if (max_magnitude < MIN_PEAK_THRESHOLD) {
+        BSP_LCD_DisplayStringAt(0, 210, (uint8_t*)"No motion", CENTER_MODE);
+        return 0.0f;
+    }
+
+    // Shift index to center FFT around 0 Hz
+    int bin_centered = (max_index >= FFT_SIZE / 2) ? (max_index - FFT_SIZE) : max_index;
+    float32_t bin_resolution = ADC_FS / (float32_t)FFT_SIZE;
+    float32_t doppler_frequency = bin_centered * bin_resolution;
+
+    // Calculate velocity (λ = c / f_c)
+    float32_t lambda = SPEED_OF_LIGHT / FMCW_CARRIER_HZ;
+    float32_t velocity = (doppler_frequency * lambda) / 2.0f;
+
+    // Update history buffer
+    velocity_history[velocity_index++] = velocity;
+    if (velocity_index >= VELOCITY_SMOOTH_WINDOW) velocity_index = 0;
+
+    // Compute average
+    float32_t velocity_avg = 0;
+    for (int i = 0; i < VELOCITY_SMOOTH_WINDOW; i++) {
+        velocity_avg += velocity_history[i];
+    }
+    velocity_avg /= VELOCITY_SMOOTH_WINDOW;
+
+    // Display smoothed velocity
+    snprintf(text_, sizeof(text_), "Vel: %6.1f m/s", velocity_avg);
+    BSP_LCD_DisplayStringAt(0, 240, (uint8_t*)text_, CENTER_MODE);
+
+    return velocity_avg;
+/*
+    // Show result
+
+    snprintf(text_, sizeof(text_), "Vel: %6.1f m/s", velocity);
+    BSP_LCD_DisplayStringAt(0, 240, (uint8_t*)text_, CENTER_MODE);
+
+    return velocity;*/
+}
+
+void FMCW_show_fft_magnitude_scaled(float32_t scale)
 {
-    const uint32_t Y_OFFSET = 260;
-    const uint32_t X_SIZE = 240;
-    const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;
-    uint32_t data;
-    uint32_t data_last;
+	const uint32_t Y_OFFSET = 260;
+	const uint32_t X_SIZE = 240;
+	//const uint32_t bins_to_draw = (FFT_SIZE < X_SIZE * 2) ? FFT_SIZE : X_SIZE * 2;
+	uint32_t bins_to_draw = FFT_SIZE ;
+	const uint32_t IGNORE = 0;
+	const uint32_t start_bin = IGNORE;
+	const uint32_t end_bin = bins_to_draw - IGNORE;
 
+	// Clear display
+	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+	BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
 
-    // Clear the display
-    BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-    BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
+	// Initial point
+	uint32_t y0 = (uint32_t)(FFT_MAG[start_bin] * scale);
+	uint32_t x0 = 0;
 
-    uint32_t valid_samples = (ADC_NUMS < FFT_SIZE) ? ADC_NUMS : FFT_SIZE;
+	for (uint32_t i = start_bin, x = 1; i < end_bin; i += 1, x++) {
+		uint32_t y1 = (uint32_t)(FFT_MAG[i] * scale);
 
-    for (uint32_t i = 0; i < valid_samples; i++) {
-        if (MEAS_input_count == 2) {
-            fft_input[2 * i]     = (float32_t)ADC_samples[2 * i];       // I
-            fft_input[2 * i + 1] = (float32_t)ADC_samples[2 * i + 1];   // Q
-        } else {
-            fft_input[2 * i]     = (float32_t)ADC_samples[i];  // nur I
-            fft_input[2 * i + 1] = 0.0f;                        // Q = 0
-        }
-    }
+		// Clip to LCD height
+		if (y0 > Y_OFFSET - 1) y0 = Y_OFFSET - 1;
+		if (y1 > Y_OFFSET - 1) y1 = Y_OFFSET - 1;
 
-    // Zero Padding für restliche FFT-Eingänge
-    for (uint32_t i = valid_samples; i < FFT_SIZE; i++) {
-        fft_input[2 * i] = 0.0f;
-        fft_input[2 * i + 1] = 0.0f;
-    }
+		// Draw magnitude in green
+		BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
+		BSP_LCD_DrawLine(x0, Y_OFFSET - y0, x, Y_OFFSET - y1);
 
+		y0 = y1;
+		x0 = x;
+	}
 
-    // Fensterung (Hann Window)
-    for (uint16_t i = 0; i < FFT_SIZE; i++) {
-    	float32_t window = 0.5f * (1.0f - arm_cos_f32(2 * PI * i / (FFT_SIZE - 1)));
-        fft_input[2 * i] *= window;
-        fft_input[2 * i + 1] *= window;
-        }
+	// Optional label
+	BSP_LCD_SetFont(&Font20);
+	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	BSP_LCD_DisplayStringAt(0, Y_OFFSET + 10, (uint8_t *)"Green: Magnitude (scaled)", CENTER_MODE);
 
-    // FFT durchführen
-    arm_cfft_radix4_f32(&fft_inst, fft_input);
-
-     // Magnitude berechnen
-    arm_cmplx_mag_f32(fft_input, fft_output, FFT_SIZE);
-
-           // Display vorbereiten
-     BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-     BSP_LCD_FillRect(0, 0, 240, 320);
-     BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-
-      // Maximalwert finden für Skalierung
-     float32_t max_value;
-     arm_max_f32(fft_output + 1, FFT_SIZE / 2 - 1, &max_value, NULL);
-     float32_t scale = 200.0f / (max_value + 0.001f); // +0.001 um Division durch 0 zu vermeiden
-
-     // FFT plotten
-     for (uint16_t i = 1; i < FFT_SIZE / 2; i++) {
-          uint16_t height = (uint16_t)(fft_output[i] * scale);
-          if (height > 200) height = 200;
-          {
-        	  uint16_t x = i * 240 / (FFT_SIZE / 2);
-              BSP_LCD_DrawLine(x, 250, x, 250 - height);
-          }
-		}
-
-          // Frequenzinformation anzeigen
-     BSP_LCD_SetFont(&Font16);
-     BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-     BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-     char text[32];
-     snprintf(text, sizeof(text), "Max Freq: %.1f Hz", max_value * ADC_FS / FFT_SIZE);
-     BSP_LCD_DisplayStringAt(0, 20, (uint8_t *)text, LEFT_MODE);
+	FFT_data_ready = false;
 }
 
+void FMCW_applyCalibrationFft(void){
+	for(int i = 0; i < ADC_NUMS; i++){
+		FFT_MAG[i] = FFT_MAG[i] - FFT_MAG_calibrate[i];
+	}
+}
+
+bool FMCW_calibrateFft(void){
+	static int counter = 0;
+	static int number_of_counts = 5;
+
+	switch(calibrate_status){
+
+	case 0:		// Start calibration
+		counter = 0;
+		for(int i = 0; i < FFT_SIZE; i++){
+			FFT_MAG[i] = 0.0f;
+			calibrate_status = 1;
+		}
+		break;
+
+	case 1: 	// Calibration in progress
+		if(counter < number_of_counts){
+			for(int i = 0; i < FFT_SIZE; i++){
+				FFT_MAG_calibrate[i] = FFT_MAG_calibrate[i] + FFT_MAG[i];
+			}
+			counter++;
+		} else{
+			for(int i = 0; i < ADC_NUMS; i++){
+				FFT_MAG_calibrate[i] = FFT_MAG_calibrate[i] / number_of_counts;
+
+			}
+			calibrate_status = 2;
+		}
+		break;
+
+	case 2:
+
+		break;
+
+	default:
+		calibrate_status = 0;
+		break;
+
+	}
+
+
+	// return 1
+	if(calibrate_status == 2){
+		return 1;
+	} else{
+		return 0;
+	}
+
+}
 
 void show_data_menu_zero(void)
 {
@@ -805,128 +948,90 @@ void show_data_menu_zero(void)
 	ADC_sample_count = 0;
 }
 
-/*
+void show_data_menu_one(void) {
+
+
+	FMCW_separateSamples();       // Split and DC correct I/Q
+    FMCW_applyHanningWindow();    // Optional: Hanning window
+    FMCW_prepareFft();            // Format I/Q as complex array
+    FMCW_doFft();                 // Run FFT
+    FMCW_convertFftToMagnitude(); // Get magnitudes
+    FMCW_calibrateFft();
+
+
+    // LCD plotting (FFT magnitude like in menu_zero)
+    const uint32_t Y_OFFSET = 260;
+    const uint32_t X_SIZE = 240;
+    const uint32_t f = 300; // scaling factor for amplitude, adjust as needed
+    uint32_t data, data_last;
+
+
+    // Clear LCD
+    BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+    BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
+
+    // Draw FFT magnitude as blue line
+    BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
+    data = (uint32_t)(FFT_MAG[0] / f);
+    for (uint32_t i = 1; i < FFT_SIZE; i++) {
+        data_last = data;
+        data = (uint32_t)(FFT_MAG[i] / f);
+        if (data > Y_OFFSET) data = Y_OFFSET;
+        if (data_last > Y_OFFSET) data_last = Y_OFFSET;
+        BSP_LCD_DrawLine(3 * (i - 1), Y_OFFSET - data_last, 3 * i, Y_OFFSET - data);
+    }
+
+    // Optional: Display peak frequency and velocity
+    FMCW_getPeakMangitudeFrequency();  // Also shows frequency on LCD
+    if(calibrate_status == 2){
+    	FMCW_applyCalibrationFft();
+    	FMCW_getRadialVelocity();
+    	//FMCW_show_fft_magnitude_scaled(0.001);
+    	//FMCW_getPeakMangitudeFrequency();
+    	MEAS_data_ready = false;
+
+
+    }
+}
+
 void MEAS_show_data(void)
 {
-    static arm_cfft_radix4_instance_f32 fft_inst;
-    //static bool fft_initialized = false;
-    const uint32_t FFT_SIZE = 512;
-    //static float32_t fft_input[FFT_SIZE * 2];
-    //static float32_t fft_output[FFT_SIZE];
-    const uint32_t SAMPLE_RATE = 2000; // Anpassen an Ihre tatsächliche Abtastrate
-
-    if (!fft_initialized) {
-        arm_cfft_radix4_init_f32(&fft_inst, FFT_SIZE, 0, 1);
-        fft_initialized = true;
-    }
-
-
- //   if (MENU_get_transition() == MENU_ONE) { // FFT-Modus
- //       // FFT mit den letzten Samples berechnen
- //       uint32_t start_idx = (ADC_NUMS > FFT_SIZE) ? (ADC_NUMS - FFT_SIZE) : 0;
-
-     // I/Q-Daten in FFT-Input kopieren
-        for (uint32_t i = 0; i < FFT_SIZE; i++) {
-            if ((start_idx + i) < ADC_NUMS && MEAS_input_count == 2) {
-                fft_input[2 * i] = (float32_t)ADC_samples[2 * (start_idx + i)];     // I
-                fft_input[2 * i + 1] = (float32_t)ADC_samples[2 * (start_idx + i) + 1]; // Q
-            } else {
-                fft_input[2 * i] = 0;
-                fft_input[2 * i + 1] = 0;
-            }
-        }
-
-        // Fensterung (Hann Window)
-        for (uint16_t i = 0; i < FFT_SIZE; i++) {
-            float32_t window = 0.5f * (1.0f - arm_cos_f32(2 * PI * i / (FFT_SIZE - 1)));
-            fft_input[2 * i] *= window;
-            fft_input[2 * i + 1] *= window;
-        }
-
-        // FFT durchführen
-        arm_cfft_radix4_f32(&fft_inst, fft_input);
-
-        // Magnitude berechnen
-        arm_cmplx_mag_f32(fft_input, fft_output, FFT_SIZE);
-
-        // Display vorbereiten
-        BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-        BSP_LCD_FillRect(0, 0, 240, 320);
-        BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-
-        // Maximalwert finden für Skalierung
-        float32_t max_value;
-        arm_max_f32(fft_output + 1, FFT_SIZE / 2 - 1, &max_value, NULL);
-        float32_t scale = 200.0f / (max_value + 0.001f); // +0.001 um Division durch 0 zu vermeiden
-
-        // FFT plotten
-        for (uint16_t i = 1; i < FFT_SIZE / 2; i++) {
-            uint16_t height = (uint16_t)(fft_output[i] * scale);
-            if (height > 200) height = 200;
-
-            uint16_t x = i * 240 / (FFT_SIZE / 2);
-            BSP_LCD_DrawLine(x, 300, x, 300 - height);
-        }
-
-        // Frequenzinformation anzeigen
-        BSP_LCD_SetFont(&Font16);
-        BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-        char text[32];
-        snprintf(text, sizeof(text), "Max Freq: %.1f Hz", max_value * SAMPLE_RATE / FFT_SIZE);
-        BSP_LCD_DisplayStringAt(0, 20, (uint8_t *)text, LEFT_MODE);
-
-    // Originaler Zeitbereichsplot
-        const uint32_t Y_OFFSET = 260;
-        const uint32_t X_SIZE = 240;
-        const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;
-        uint32_t data;
-        uint32_t data_last;
-
-        //Clear the display
-        BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-        BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET + 1);
-
-        // Write first 2 samples as numbers
-        BSP_LCD_SetFont(&Font24);
-        BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
-        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-        char text[16];
-        snprintf(text, 15, "1. sample %4d", (int)(ADC_samples[0]));
-        BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
-        snprintf(text, 15, "2. sample %4d", (int)(ADC_samples[1]));
-        BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
-
-        // Draw the values of input channel 1 as a curve
-        BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
-        data = ADC_samples[MEAS_input_count * 0] / f;
-        for (uint32_t i = 1; i < ADC_NUMS; i++) {
-            data_last = data;
-            data = (ADC_samples[MEAS_input_count * i]) / f;
-            if (data > Y_OFFSET) data = Y_OFFSET;
-            BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i, Y_OFFSET - data);
-        }
-
-        //Draw the values of input channel 2 (if present) as a curve
-        if (MEAS_input_count == 2) {
-            BSP_LCD_SetTextColor(LCD_COLOR_RED);
-            data = ADC_samples[MEAS_input_count * 0 + 1] / f;
-            for (uint32_t i = 1; i < ADC_NUMS; i++) {
-                data_last = data;
-                data = (ADC_samples[MEAS_input_count * i + 1]) / f;
-                if (data > Y_OFFSET) data = Y_OFFSET;
-                BSP_LCD_DrawLine(4 * (i - 1), Y_OFFSET - data_last, 4 * i, Y_OFFSET - data);
-            }
-        }
-    }
-
-    //Clear buffer and flag
-    for (uint32_t i = 0; i < ADC_NUMS; i++) {
-        ADC_samples[2 * i] = 0;
-        ADC_samples[2 * i + 1] = 0;
-    }
-    ADC_sample_count = 0;
+	const uint32_t Y_OFFSET = 260;
+	const uint32_t X_SIZE = 240;
+	const uint32_t f = (1 << ADC_DAC_RES) / Y_OFFSET + 1;	// Scaling factor
+	uint32_t data;
+	uint32_t data_last;
+	/* Clear the display */
+	BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+	BSP_LCD_FillRect(0, 0, X_SIZE, Y_OFFSET+1);
+	/* Write first 2 samples as numbers */
+	BSP_LCD_SetFont(&Font24);
+	BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	char text[16];
+	snprintf(text, 15, "1. sample %4d", (int)(ADC_samples[0]));
+	BSP_LCD_DisplayStringAt(0, 50, (uint8_t *)text, LEFT_MODE);
+	snprintf(text, 15, "2. sample %4d", (int)(ADC_samples[1]));
+	BSP_LCD_DisplayStringAt(0, 80, (uint8_t *)text, LEFT_MODE);
+	/* Draw the  values of input channel 1 as a curve */
+	BSP_LCD_SetTextColor(LCD_COLOR_BLUE);
+	data = ADC_samples[MEAS_input_count*0] / f;
+	for (uint32_t i = 1; i < ADC_NUMS; i++){
+		data_last = data;
+		data = (ADC_samples[MEAS_input_count*i]) / f;
+		if (data > Y_OFFSET) { data = Y_OFFSET; }// Limit value, prevent crash
+		BSP_LCD_DrawLine((i-1), Y_OFFSET-data_last, i, Y_OFFSET-data);
+	}
+	/* Draw the  values of input channel 2 (if present) as a curve */
+	if (MEAS_input_count == 2) {
+		BSP_LCD_SetTextColor(LCD_COLOR_RED);
+		data = ADC_samples[MEAS_input_count*0+1] / f;
+		for (uint32_t i = 1; i < ADC_NUMS; i++){
+			data_last = data;
+			data = (ADC_samples[MEAS_input_count*i+1]) / f;
+			if (data > Y_OFFSET) { data = Y_OFFSET; }// Limit value, prevent crash
+			BSP_LCD_DrawLine((i-1), Y_OFFSET-data_last, i, Y_OFFSET-data);
+		}
+	}
 }
-*/
-
 
