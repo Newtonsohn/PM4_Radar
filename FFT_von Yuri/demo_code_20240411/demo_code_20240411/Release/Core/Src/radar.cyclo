@@ -1,0 +1,3 @@
+../Core/Src/radar.c:11:6:init_radar	1
+../Core/Src/radar.c:16:6:init_gpio	1
+../Core/Src/radar.c:105:6:subsystem_test	1

@@ -1,0 +1,10 @@
+../Core/Src/menu.c:79:6:MENU_draw	2
+../Core/Src/menu.c:105:6:MENU_hint	1
+../Core/Src/menu.c:128:6:MENU_set_entry	2
+../Core/Src/menu.c:141:14:MENU_get_entry	2
+../Core/Src/menu.c:160:13:MENU_get_transition	1
+../Core/Src/menu.c:178:6:MENU_check_transition	7
+../Core/Src/menu.c:238:6:EXTI15_10_IRQHandler	3
+../Core/Src/menu.c:252:5:SHOW_STARTMENU	12
+../Core/Src/menu.c:320:7:SHOW_TRIGGEREDMENU	24
+../Core/Src/menu.c:443:7:change_pin	23
