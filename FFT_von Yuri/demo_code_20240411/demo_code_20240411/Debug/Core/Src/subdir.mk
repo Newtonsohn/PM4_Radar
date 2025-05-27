@@ -6,6 +6,7 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/arm_cfft_init_f32.c \
+../Core/Src/buzzer.c \
 ../Core/Src/main.c \
 ../Core/Src/measuring.c \
 ../Core/Src/menu.c \
@@ -18,6 +19,7 @@ C_SRCS += \
 
 OBJS += \
 ./Core/Src/arm_cfft_init_f32.o \
+./Core/Src/buzzer.o \
 ./Core/Src/main.o \
 ./Core/Src/measuring.o \
 ./Core/Src/menu.o \
@@ -30,6 +32,7 @@ OBJS += \
 
 C_DEPS += \
 ./Core/Src/arm_cfft_init_f32.d \
+./Core/Src/buzzer.d \
 ./Core/Src/main.d \
 ./Core/Src/measuring.d \
 ./Core/Src/menu.d \
@@ -48,7 +51,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/arm_cfft_init_f32.cyclo ./Core/Src/arm_cfft_init_f32.d ./Core/Src/arm_cfft_init_f32.o ./Core/Src/arm_cfft_init_f32.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/measuring.cyclo ./Core/Src/measuring.d ./Core/Src/measuring.o ./Core/Src/measuring.su ./Core/Src/menu.cyclo ./Core/Src/menu.d ./Core/Src/menu.o ./Core/Src/menu.su ./Core/Src/misc.cyclo ./Core/Src/misc.d ./Core/Src/misc.o ./Core/Src/misc.su ./Core/Src/pin_handling.cyclo ./Core/Src/pin_handling.d ./Core/Src/pin_handling.o ./Core/Src/pin_handling.su ./Core/Src/pushbutton.cyclo ./Core/Src/pushbutton.d ./Core/Src/pushbutton.o ./Core/Src/pushbutton.su ./Core/Src/radar.cyclo ./Core/Src/radar.d ./Core/Src/radar.o ./Core/Src/radar.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su
+	-$(RM) ./Core/Src/arm_cfft_init_f32.cyclo ./Core/Src/arm_cfft_init_f32.d ./Core/Src/arm_cfft_init_f32.o ./Core/Src/arm_cfft_init_f32.su ./Core/Src/buzzer.cyclo ./Core/Src/buzzer.d ./Core/Src/buzzer.o ./Core/Src/buzzer.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/measuring.cyclo ./Core/Src/measuring.d ./Core/Src/measuring.o ./Core/Src/measuring.su ./Core/Src/menu.cyclo ./Core/Src/menu.d ./Core/Src/menu.o ./Core/Src/menu.su ./Core/Src/misc.cyclo ./Core/Src/misc.d ./Core/Src/misc.o ./Core/Src/misc.su ./Core/Src/pin_handling.cyclo ./Core/Src/pin_handling.d ./Core/Src/pin_handling.o ./Core/Src/pin_handling.su ./Core/Src/pushbutton.cyclo ./Core/Src/pushbutton.d ./Core/Src/pushbutton.o ./Core/Src/pushbutton.su ./Core/Src/radar.cyclo ./Core/Src/radar.d ./Core/Src/radar.o ./Core/Src/radar.su ./Core/Src/stm32f4xx_it.cyclo ./Core/Src/stm32f4xx_it.d ./Core/Src/stm32f4xx_it.o ./Core/Src/stm32f4xx_it.su ./Core/Src/system_stm32f4xx.cyclo ./Core/Src/system_stm32f4xx.d ./Core/Src/system_stm32f4xx.o ./Core/Src/system_stm32f4xx.su
 
 .PHONY: clean-Core-2f-Src
 

@@ -31,6 +31,8 @@ Core/Src/main.o: ../Core/Src/main.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery.h \
@@ -44,8 +46,6 @@ Core/Src/main.o: ../Core/Src/main.c \
  ../Drivers/BSP/STM32F429I-Discovery/../Components/stmpe811/stmpe811.h \
  ../Drivers/BSP/STM32F429I-Discovery/../Components/stmpe811/../Common/ts.h \
  ../Drivers/BSP/STM32F429I-Discovery/../Components/stmpe811/../Common/io.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
- ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Core/Inc/main.h ../Core/Inc/pushbutton.h ../Core/Inc/menu.h \
  ../Core/Inc/measuring.h ../Core/Inc/misc.h ../Core/Src/radar.h
@@ -81,6 +81,8 @@ Core/Src/main.o: ../Core/Src/main.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_hcd.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 ../Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery.h:
@@ -94,8 +96,6 @@ Core/Src/main.o: ../Core/Src/main.c \
 ../Drivers/BSP/STM32F429I-Discovery/../Components/stmpe811/stmpe811.h:
 ../Drivers/BSP/STM32F429I-Discovery/../Components/stmpe811/../Common/ts.h:
 ../Drivers/BSP/STM32F429I-Discovery/../Components/stmpe811/../Common/io.h:
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
-../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Core/Inc/main.h:
 ../Core/Inc/pushbutton.h:

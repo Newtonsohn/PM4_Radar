@@ -32,6 +32,9 @@
 #include <string.h>
 #include "misc.h"
 #include "main.h"
+#include "buzzer.h"
+#include <stdbool.h>
+
 
 
 /******************************************************************************
@@ -46,7 +49,7 @@
 #define BTN_SIZE 100
 #define BTN_NUM 2
 #define BTN_GAP 13
-#define TIME_DEFUSE 10
+#define TIME_DEFUSE 60
 /******************************************************************************
  * Variables
  *****************************************************************************/
@@ -249,6 +252,12 @@ void EXTI15_10_IRQHandler(void)
 }
 
 
+void LCD_ClearScreen(void)
+{
+    BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+    BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+    BSP_LCD_Clear(LCD_COLOR_WHITE);
+}
 
 int SHOW_STARTMENU(void)
 {
@@ -318,126 +327,191 @@ int SHOW_STARTMENU(void)
 	return pressed;
 
 }
-char* SHOW_TRIGGEREDMENU(uint8_t alarmset)
+
+char* SHOW_DEFUSEMENU(void)
 {
+    BSP_LCD_Clear(LCD_COLOR_RED);
+    BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+    BSP_LCD_SetBackColor(LCD_COLOR_RED);
+    BSP_LCD_SetFont(&Font20);
+    BSP_LCD_DisplayStringAt(0, 120, (uint8_t *)"MOTION DETECTED!", LEFT_MODE);
+    BSP_LCD_DisplayStringAt(0, 140, (uint8_t *)"ENTER PIN TO", LEFT_MODE);
+    BSP_LCD_DisplayStringAt(0, 160, (uint8_t *)"DEACTIVATE!", LEFT_MODE);
+    HAL_Delay(3000);
 
-	start_countdown(TIME_DEFUSE);
-    static char pin_buffer[PIN_MAX_LEN + 1] = {0}; // Rückgabe-Buffer
-    uint8_t pin_index = 0;
-    TS_StateTypeDef TS_State;
-    const uint16_t btn_w = 60, btn_h = 60;
-    const uint16_t start_x = 20, start_y = 50;
-    const uint16_t gap = 10;
-
-
+    BSP_LCD_Clear(LCD_COLOR_WHITE);
     BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
     BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
     BSP_LCD_SetFont(&Font24);
-    HAL_Delay(1000);
+
+    static char pin_buffer[PIN_MAX_LEN + 1] = {0};
+    uint8_t pin_index = 0;
+    TS_StateTypeDef TS_State;
+
+    draw_numpad();
+
+    // Initiale PIN-Anzeige
+    BSP_LCD_DisplayStringAt(0, 3, (uint8_t *)pin_buffer, LEFT_MODE);
+
+    start_countdown(TIME_DEFUSE);
+
+    while (1) {
+        if (update_countdown() <= 0) {
+            return NULL;  // Zeit abgelaufen → Alarm
+        }
+
+        BSP_TS_GetState(&TS_State);
+        if (!TS_State.TouchDetected) continue;
+
+        HAL_Delay(150); // debounce
+        bool ok_pressed = false;
+        handle_touch_input(&TS_State, pin_buffer, &pin_index, &ok_pressed);
+
+        if (ok_pressed && strlen(pin_buffer) >= PIN_MIN_LEN) {
+            return pin_buffer;
+        }
+        // Aktualisiere PIN-Anzeige
+        BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+        BSP_LCD_FillRect(0, 0, xSize, 30);
+        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+        BSP_LCD_DisplayStringAt(0, 3, (uint8_t *)pin_buffer, LEFT_MODE);
+
+        if (strlen(pin_buffer) == PIN_MAX_LEN) {
+            return pin_buffer;
+        }
+    }
+}
+
+
+char* SHOW_ALARMMENU(void)
+{
+    BSP_LCD_Clear(LCD_COLOR_RED);
+    BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+    BSP_LCD_SetBackColor(LCD_COLOR_RED);
+    BSP_LCD_SetFont(&Font24);
+    BSP_LCD_DisplayStringAt(0, 120, (uint8_t *)"ALARM STARTED", CENTER_MODE);
+    HAL_Delay(3000);
+
+    BSP_LCD_Clear(LCD_COLOR_WHITE);
+    BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+    BSP_LCD_SetBackColor(LCD_COLOR_WHITE);
+    BSP_LCD_SetFont(&Font24);
+
+    static char pin_buffer[PIN_MAX_LEN + 1] = {0};
+    uint8_t pin_index = 0;
+    TS_StateTypeDef TS_State;
+
+    draw_numpad();
+
+    BSP_LCD_DisplayStringAt(0, 3, (uint8_t *)pin_buffer, LEFT_MODE);
+
+    while (1) {
+        BSP_TS_GetState(&TS_State);
+        if (!TS_State.TouchDetected) continue;
+
+        HAL_Delay(150);
+        bool ok_pressed = false;
+        handle_touch_input(&TS_State, pin_buffer, &pin_index, &ok_pressed);
+
+        if (ok_pressed && strlen(pin_buffer) >= PIN_MIN_LEN) {
+            return pin_buffer;
+        }
+        BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+        BSP_LCD_FillRect(0, 0, xSize, 30);
+        BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+        BSP_LCD_DisplayStringAt(0, 3, (uint8_t *)pin_buffer, LEFT_MODE);
+
+        if (strlen(pin_buffer) == PIN_MAX_LEN) {
+            return pin_buffer;
+        }
+    }
+}
+
+
+
+void draw_numpad(void)
+{
+    const uint16_t btn_w = 60, btn_h = 60;
+    const uint16_t start_x = 20, start_y = 30;
+    const uint16_t gap = 10;
 
     char label[2] = {'0', '\0'};
-	for (uint8_t i = 1; i <= 9; i++) {
-		uint16_t row = (i - 1) / 3;
-		uint16_t col = (i - 1) % 3;
-		uint16_t x = start_x + col * (btn_w + gap);
-		uint16_t y = start_y + row * (btn_h + gap);
-		BSP_LCD_DrawRect(x, y, btn_w, btn_h);
-		label[0] = '0' + i;
-		BSP_LCD_DisplayStringAt(x + 20, y + 20, (uint8_t *)label, LEFT_MODE);
-	}
-	// Button 0
-	BSP_LCD_DrawRect(start_x + btn_w + gap, start_y + 3 * (btn_h + gap), btn_w, btn_h);
-	BSP_LCD_DisplayStringAt(start_x + btn_w + gap + 20, start_y + 3 * (btn_h + gap) + 20, (uint8_t *)"0", LEFT_MODE);
+    for (uint8_t i = 1; i <= 9; i++) {
+        uint16_t row = (i - 1) / 3;
+        uint16_t col = (i - 1) % 3;
+        uint16_t x = start_x + col * (btn_w + gap);
+        uint16_t y = start_y + row * (btn_h + gap);
+        BSP_LCD_DrawRect(x, y, btn_w, btn_h);
+        label[0] = '0' + i;
+        BSP_LCD_DisplayStringAt(x + 20, y + 20, (uint8_t *)label, LEFT_MODE);
+    }
 
-	// OK-Button
-	BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-	BSP_LCD_DrawRect(start_x, start_y + 3 * (btn_h + gap), btn_w, btn_h);
-	BSP_LCD_DisplayStringAt(start_x + 10, start_y + 3 * (btn_h + gap) + 20, (uint8_t *)"OK", LEFT_MODE);
+    BSP_LCD_DrawRect(start_x + btn_w + gap, start_y + 3 * (btn_h + gap), btn_w, btn_h);
+    BSP_LCD_DisplayStringAt(start_x + btn_w + gap + 20, start_y + 3 * (btn_h + gap) + 20, (uint8_t *)"0", LEFT_MODE);
 
-	// Clear-Button
-	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	BSP_LCD_DrawRect(start_x + 2 * (btn_w + gap), start_y + 3 * (btn_h + gap), btn_w, btn_h);
-	BSP_LCD_DisplayStringAt(start_x + 10 + 2 * (btn_w + gap), start_y + 3 * (btn_h + gap) + 20, (uint8_t *)"CLR", LEFT_MODE);
+    BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
+    BSP_LCD_DrawRect(start_x, start_y + 3 * (btn_h + gap), btn_w, btn_h);
+    BSP_LCD_DisplayStringAt(start_x + 10, start_y + 3 * (btn_h + gap) + 20, (uint8_t *)"OK", LEFT_MODE);
 
-	BSP_LCD_SetTextColor(LCD_COLOR_BLACK); // Reset Farbe
-	while (1) {
-		if(alarmset)
-		{
-			BSP_LED_Toggle(LED4);			// Visual feedback when running
-		}
-		if(update_countdown() <= 0)
-			return NULL;
-		BSP_TS_GetState(&TS_State);
-		if (TS_State.TouchDetected) {
+    BSP_LCD_SetTextColor(LCD_COLOR_RED);
+    BSP_LCD_DrawRect(start_x + 2 * (btn_w + gap), start_y + 3 * (btn_h + gap), btn_w, btn_h);
+    BSP_LCD_DisplayStringAt(start_x + 10 + 2 * (btn_w + gap), start_y + 3 * (btn_h + gap) + 20, (uint8_t *)"CLR", LEFT_MODE);
 
+    BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+}
 
-			uint16_t tx = 240 - TS_State.X;  // X spiegeln
-			uint16_t ty = TS_State.Y;        // Y bleibt gleich
+void handle_touch_input(TS_StateTypeDef* ts, char* pin_buffer, uint8_t* pin_index, bool* ok_pressed)
+{
+    const uint16_t btn_w = 60, btn_h = 60;
+    const uint16_t start_x = 20, start_y = 30;
+    const uint16_t gap = 10;
 
-			// Touchscreen-Ausrichtung korrigieren (STM32F429I-Discovery)
-			HAL_Delay(150); // Debounce
+    uint16_t tx = 240 - ts->X;
+    uint16_t ty = ts->Y;
 
-			// Ziffern-Buttons
-			for (uint8_t i = 1; i <= 9; i++) {
-				uint16_t row = (i - 1) / 3;
-				uint16_t col = (i - 1) % 3;
-				uint16_t x = start_x + col * (btn_w + gap);
-				uint16_t y = start_y + row * (btn_h + gap);
-				if (tx >= x && tx <= x + btn_w && ty >= y && ty <= y + btn_h) {
-					if (pin_index < PIN_MAX_LEN) {
-						pin_buffer[pin_index++] = '0' + i;
-						pin_buffer[pin_index] = '\0';
-					}
-				}
-			}
-			// Button 0
-			uint16_t x0 = start_x + btn_w + gap;
-			uint16_t y0 = start_y + 3 * (btn_h + gap);
-			if (tx >= x0 && tx <= x0 + btn_w && ty >= y0 && ty <= y0 + btn_h) {
-				if (pin_index < PIN_MAX_LEN) {
-					pin_buffer[pin_index++] = '0';
-					pin_buffer[pin_index] = '\0';
-				}
-			}
-			// OK Button
-			uint16_t ok_x = start_x;
-			uint16_t ok_y = start_y + 3 * (btn_h + gap);
-			if (tx >= ok_x && tx <= ok_x + btn_w && ty >= ok_y && ty <= ok_y + btn_h) {
-				return pin_buffer;
-			}
-			// CLR Button
-			uint16_t clr_x = start_x + 2 * (btn_w + gap);
-			uint16_t clr_y = start_y + 3 * (btn_h + gap);
-			if (tx >= clr_x && tx <= clr_x + btn_w && ty >= clr_y && ty <= clr_y + btn_h) {
-				memset(pin_buffer, 0, sizeof(pin_buffer));
-				BSP_LCD_DisplayStringAt(0, 3,(uint8_t *)"       ", LEFT_MODE);
-				pin_index = 0;
-			}
+    for (uint8_t i = 1; i <= 9; i++) {
+        uint16_t row = (i - 1) / 3;
+        uint16_t col = (i - 1) % 3;
+        uint16_t x = start_x + col * (btn_w + gap);
+        uint16_t y = start_y + row * (btn_h + gap);
+        if (tx >= x && tx <= x + btn_w && ty >= y && ty <= y + btn_h) {
+            if (*pin_index < PIN_MAX_LEN) {
+                pin_buffer[(*pin_index)++] = '0' + i;
+                pin_buffer[*pin_index] = '\0';
+            }
+            return;
+        }
+    }
 
-			// Anzeige aktualisieren
-			BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
-			BSP_LCD_FillRect(0, ySize - 40, xSize, 30);
-			BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-			BSP_LCD_DisplayStringAt(0, 3, (uint8_t *)pin_buffer, LEFT_MODE);
-			// Button 0
-			BSP_LCD_DrawRect(start_x + btn_w + gap, start_y + 3 * (btn_h + gap), btn_w, btn_h);
-			BSP_LCD_DisplayStringAt(start_x + btn_w + gap + 20, start_y + 3 * (btn_h + gap) + 20, (uint8_t *)"0", LEFT_MODE);
+    uint16_t x0 = start_x + btn_w + gap;
+    uint16_t y0 = start_y + 3 * (btn_h + gap);
+    if (tx >= x0 && tx <= x0 + btn_w && ty >= y0 && ty <= y0 + btn_h) {
+        if (*pin_index < PIN_MAX_LEN) {
+            pin_buffer[(*pin_index)++] = '0';
+            pin_buffer[*pin_index] = '\0';
+        }
+        return;
+    }
 
-			// OK-Button
-			BSP_LCD_SetTextColor(LCD_COLOR_GREEN);
-			BSP_LCD_DrawRect(start_x, start_y + 3 * (btn_h + gap), btn_w, btn_h);
-			BSP_LCD_DisplayStringAt(start_x + 10, start_y + 3 * (btn_h + gap) + 15, (uint8_t *)"OK", LEFT_MODE);
+    uint16_t ok_x = start_x;
+    uint16_t ok_y = start_y + 3 * (btn_h + gap);
+    if (tx >= ok_x && tx <= ok_x + btn_w && ty >= ok_y && ty <= ok_y + btn_h) {
+        *ok_pressed = true;  // <–– neu
+        return;
+    }
 
-			// Clear-Button
-			BSP_LCD_SetTextColor(LCD_COLOR_RED);
-			BSP_LCD_DrawRect(start_x + 2 * (btn_w + gap), start_y + 3 * (btn_h + gap), btn_w, btn_h);
-			BSP_LCD_DisplayStringAt(start_x + 10 + 2 * (btn_w + gap), start_y + 3 * (btn_h + gap) + 20, (uint8_t *)"CLR", LEFT_MODE);
+    uint16_t clr_x = start_x + 2 * (btn_w + gap);
+    uint16_t clr_y = start_y + 3 * (btn_h + gap);
+    if (tx >= clr_x && tx <= clr_x + btn_w && ty >= clr_y && ty <= clr_y + btn_h) {
+        memset(pin_buffer, 0, PIN_MAX_LEN + 1);
+        *pin_index = 0;
+    }
 
-			BSP_LCD_SetTextColor(LCD_COLOR_BLACK); // Reset Farbe
-		}
-	}
-	return NULL;
-
+    BSP_LCD_SetTextColor(LCD_COLOR_WHITE);
+    BSP_LCD_FillRect(0, ySize - 40, xSize, 30);
+    BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+    BSP_LCD_DisplayStringAt(0, 3, (uint8_t *)pin_buffer, LEFT_MODE);
+    draw_numpad();
 }
 
 

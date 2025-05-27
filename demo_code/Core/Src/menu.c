@@ -198,36 +198,7 @@ void MENU_check_transition(void)
 	TS_State.Y = BSP_LCD_GetYSize() - TS_State.Y;	// Invert the y-axis
 #endif
 
-
-/*
-	#if (defined(EVAL_REV_E) && !defined(FLIPPED_LCD)) || (!defined(EVAL_REV_E) && defined(FLIPPED_LCD))
-	TS_State.Y = BSP_LCD_GetYSize() - TS_State.Y;	// Invert the y-axis
-#endif
-#ifdef EVAL_REV_E
-#endif
-*/
 	if (TS_State.TouchDetected) {		// If a touch was detected
-		//current_time = 0;
-//		sprintf(msg, "Touch detected\r\n");
-//		HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
-		/*
-		// Do only if last transition not pending anymore
-
-		if (MENU_NONE == MENU_transition) {
-			item_old = item_new;		// Store old item
-			// If touched within the menu bar?
-			if ((MENU_Y < TS_State.Y) && (MENU_Y+MENU_HEIGHT > TS_State.Y)) {
-				item_new = TS_State.X	// Calculate new item
-						/ (BSP_LCD_GetXSize()/MENU_ENTRY_COUNT);
-				if ((0 > item_new) || (MENU_ENTRY_COUNT <= item_new)) {
-					item_new = MENU_NONE;	// Out of bounds
-				}
-				if (item_new == item_old) {	// 2 times the same menu item
-					item_new = MENU_NONE;
-					MENU_transition = item_old;
-				}
-			}
-		}*/
 
         item_old = item_new;           // Update old item
         if ((MENU_Y < TS_State.Y) && (MENU_Y + MENU_HEIGHT > TS_State.Y)) {
@@ -247,7 +218,6 @@ void MENU_check_transition(void)
 //		sprintf(msg, "No touch detected\r\n");
 //		HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
 	}
-
 }
 /*
 void MENU_check_transition(void)

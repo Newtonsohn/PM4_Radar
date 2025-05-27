@@ -30,6 +30,7 @@ void PWM_Start(void);
 void PWM_Stop(void);
 void PWM_SetFrequency(uint32_t frequency_hz);
 char* change_pin(void);
+void GPIO_PG13_Output_Init(void);
 /** ***************************************************************************
  * Flip LCD = rotate LCD orientation by 180°
  * @attention

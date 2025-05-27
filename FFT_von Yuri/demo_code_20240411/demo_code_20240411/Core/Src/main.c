@@ -59,7 +59,6 @@ uint32_t motion= 0;
  *****************************************************************************/
 int main(void) {
 	HAL_Init();							// Initialize the system
-
 	SystemClock_Config();				// Configure system clocks
 
 #ifdef FLIPPED_LCD
@@ -90,70 +89,76 @@ int main(void) {
 	MEAS_timer_init();					// Configure the timer
 
 	//init_radar();
-	MX_GPIO_Init();
-	MX_TIM3_Init();
+	//MX_GPIO_Init();
+	//MX_TIM3_Init();
 	ADC1_IN11_ADC2_IN13_dual_init();
 	ADC1_IN11_ADC2_IN13_dual_start();
+	//GPIO_PG13_Output_Init();
 	int select_state = 0;
-	int8_t alarmset = 0;
 	int8_t t = 1;
+
 	static char soll_pin[7] = "1234";
+
 	typedef enum{
-		STARTMENU = 0, ARMED, TRIGGERED, SUBMENU, ALARM
+		STARTMENU = 0, ARMED, DEFUSE, SUBMENU, ALARM
 	}SYSTEMSTATE;
 	SYSTEMSTATE STATE = STARTMENU;
+
+    Buzzer_Init();
 	/* Infinite while loop */
 	while (1) {							// Infinitely loop in main function
-		BSP_LED_Toggle(LED3);			// Visual feedback when running
-		switch (STATE)
-		{
+		switch (STATE){
+
 		case STARTMENU:
-			alarmset = 0;
-			PWM_Stop();
+			Buzzer_Stop();
+			//HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_RESET);  // Zum Test HIGH
+			BSP_LED_On(LED3);
 			select_state = SHOW_STARTMENU();
 			if(select_state == 1)
 			{
 				STATE = ARMED;
 				BSP_LCD_Clear(LCD_COLOR_WHITE);
-				start_countdown(10);
+				start_countdown(30);
 			}
 			else if(select_state == 2)
 			{
 				STATE = SUBMENU;
 			}
 			break;
+
 		case ARMED:
 			if(t > 0)
 				t = update_countdown();
 			if ((motion != 0)&&(t <= 0))
 			{
-				STATE = TRIGGERED;
-				BSP_LCD_Clear(LCD_COLOR_WHITE);
+				STATE = DEFUSE;
 				t = 1;
 			}
 			break;
-		case TRIGGERED:
+		case DEFUSE:
 		{
-			char* entered_pin = SHOW_TRIGGEREDMENU(alarmset);
+			char* entered_pin = SHOW_DEFUSEMENU();
 			if(entered_pin != NULL)
 			{
 				if(strcmp(entered_pin, soll_pin) == 0)
 				{
 					STATE = STARTMENU;
 					BSP_LCD_Clear(LCD_COLOR_WHITE);
-				}
-				else
-				{
+				} else{
+					BSP_LCD_Clear(LCD_COLOR_WHITE);
 					STATE = ALARM;
-					BSP_LCD_Clear(LCD_COLOR_RED);
+					Buzzer_SetFrequency(2500);
+					Buzzer_Start();
+					BSP_LED_Off(LED3);
 				}
-			}
-			else
-			{
+			} else {
+				BSP_LCD_Clear(LCD_COLOR_WHITE);
 				STATE = ALARM;
-				BSP_LCD_Clear(LCD_COLOR_RED);
-				PWM_SetFrequency(2000);
-				PWM_Start();
+				Buzzer_SetFrequency(2000);
+				Buzzer_Start();
+				//HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_SET);  // Zum Test HIGH
+				BSP_LED_Off(LED3);
+
 			}
 			break;
 		}
@@ -166,8 +171,17 @@ int main(void) {
 			}
 			break;
 		case ALARM:
-			alarmset = 1;
-			STATE = TRIGGERED;
+
+			char* entered_pin = SHOW_ALARMMENU();
+			if(entered_pin != NULL)
+			{
+				if(strcmp(entered_pin, soll_pin) == 0)
+				{
+					Buzzer_Stop();
+					STATE = STARTMENU;
+					BSP_LCD_Clear(LCD_COLOR_WHITE);
+				}
+			}
 			break;
 
 		default:
@@ -207,16 +221,10 @@ int main(void) {
 		case MENU_NONE:					// No transition => do nothing
 			break;
 		case MENU_ZERO:
-			//ADC3_IN4_single_init();
-			//ADC3_IN4_single_read();
-			//ADC1_IN11_timer_init();
-			//ADC1_IN11_timer_start();
 			ADC1_IN11_ADC2_IN13_dual_init();
 			ADC1_IN11_ADC2_IN13_dual_start();
 			break;
 		case MENU_ONE:
-			//ADC3_IN4_timer_init();
-			//ADC3_IN4_timer_start();
 			break;
 		case MENU_TWO:
 			ADC3_IN4_DMA_init();
@@ -317,64 +325,35 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   GPIO_InitTypeDef GPIO_InitStruct = {0};
-  GPIO_InitStruct.Pin = GPIO_PIN_7;  // ← PA7 statt PA6
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  //GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;  // Direkt als Ausgang
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;  // ← gleich wie bei PA6
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  //HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_RESET);  // Ruhepegel
 }
 
-void MX_TIM3_Init(void)
+void GPIO_PG13_Output_Init(void)
 {
-  __HAL_RCC_TIM3_CLK_ENABLE();
+    // Clock für Port G aktivieren
+    __HAL_RCC_GPIOG_CLK_ENABLE();
 
-  TIM_OC_InitTypeDef sConfigOC = {0};
+    GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-  htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 84 - 1;       // 84 MHz / 84 = 1 MHz Timer-Takt
-  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 500 - 1;         // 2 kHz PWM
-  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  HAL_TIM_PWM_Init(&htim3);
+    GPIO_InitStruct.Pin = GPIO_PIN_13;               // PG13
+    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;      // Push-Pull Output
+    GPIO_InitStruct.Pull = GPIO_NOPULL;              // Kein Pull-Up / Pull-Down
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;     // Geschwindigkeit (nicht kritisch bei GPIO)
 
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 250;               // 50 % Duty Cycle
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2);  // ← CH2!
+    HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+
+    // Optional: Initialzustand LOW setzen
+    HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_RESET);
 }
 
 
-void PWM_Start(void)
-{
-	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
-}
 
-void PWM_Stop(void)
-{
-	 __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 0);  // Duty = 0% → Ausgang LOW
-
-}
-
-void PWM_SetFrequency(uint32_t frequency_hz)
-{
-  uint32_t timer_clock = 1000000;  // 1 MHz durch Prescaler
-  uint32_t period = timer_clock / frequency_hz;
-
-  __HAL_TIM_DISABLE(&htim3);
-  htim3.Init.Period = period - 1;
-  HAL_TIM_PWM_Init(&htim3);
-
-  TIM_OC_InitTypeDef sConfigOC = {0};
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = (period / 2);  // 50%
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-
-  HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_2);  // ← CH2!
-  __HAL_TIM_ENABLE(&htim3);
-}
 
 // Default function implementations required to prevent build errors.
 __attribute__((weak)) void _close(void){}

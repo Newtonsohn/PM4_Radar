@@ -14,6 +14,7 @@
  * Includes
  *****************************************************************************/
 #include "stdint.h"
+#include <stdbool.h>
 
 
 /******************************************************************************
@@ -48,9 +49,13 @@ MENU_entry_t MENU_get_entry(const MENU_item_t item);
 void MENU_check_transition(void);
 MENU_item_t MENU_get_transition(void);
 
+void LCD_ClearScreen(void);
 int SHOW_STARTMENU(void);
-char* SHOW_TRIGGEREDMENU(uint8_t alarmset);
-
+char* SHOW_DEFUSEMENU(void);
+char* SHOW_ALARMMENU(void);
+void draw_numpad(void);
+char* change_pin(void);
+void handle_touch_input(TS_StateTypeDef* ts, char* pin_buffer, uint8_t* pin_index, bool* ok_pressed);
 
 
 #endif

@@ -1,4 +1,5 @@
 "./Core/Src/arm_cfft_init_f32.o"
+"./Core/Src/buzzer.o"
 "./Core/Src/main.o"
 "./Core/Src/measuring.o"
 "./Core/Src/menu.o"
